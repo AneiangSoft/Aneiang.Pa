@@ -8,6 +8,7 @@
     <Project Path="src/Aneiang.Pa.Bilibili/Aneiang.Pa.Bilibili.csproj" />
     <Project Path="src/Aneiang.Pa.Core/Aneiang.Pa.Core.csproj" />
     <Project Path="src/Aneiang.Pa.DouYin/Aneiang.Pa.DouYin.csproj" />
+    <Project Path="src/Aneiang.Pa.TouTiao/Aneiang.Pa.TouTiao.csproj" Id="1c1d0399-5f26-411d-beab-287e8824452d" />
     <Project Path="src/Aneiang.Pa.WeiBo/Aneiang.Pa.WeiBo.csproj" />
     <Project Path="src/Aneiang.Pa.ZhiHu/Aneiang.Pa.ZhiHu.csproj" />
     <Project Path="src/Aneiang.Pa/Aneiang.Pa.csproj" />

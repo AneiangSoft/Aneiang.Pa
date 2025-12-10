@@ -1,9 +1,9 @@
-﻿using Aneiang.Pa.ZhiHu.Models;
-using Aneiang.Pa.ZhiHu.News;
+﻿using Aneiang.Pa.TouTiao.Models;
+using Aneiang.Pa.TouTiao.News;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aneiang.Pa.ZhiHu.Extensions
+namespace Aneiang.Pa.TouTiao.Extensions
 {
     public static class ServiceCollectionExtensions
     {
@@ -12,14 +12,14 @@ namespace Aneiang.Pa.ZhiHu.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        public static void AddZhiHuScraper(this IServiceCollection services, IConfiguration? configuration = null)
+        public static void AddTouTiaoScraper(this IServiceCollection services, IConfiguration? configuration = null)
         {
             if (configuration != null)
             {
-                services.Configure<ZhiHuScraperOptions>(configuration.GetSection("Scraper:ZhiHu"));
+                services.Configure<TouTiaoScraperOptions>(configuration.GetSection("Scraper:TouTiao"));
             }
             services.AddHttpClient();
-            services.AddSingleton<IZhiHuNewScraper, ZhiHuNewScraper>();
+            services.AddSingleton<ITouTiaoNewScraper, TouTiaoNewScraper>();
         }
     }
 }
