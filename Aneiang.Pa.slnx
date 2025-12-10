@@ -1,9 +1,14 @@
 <Solution>
-  <Project Path="Aneiang.Pa.BaiDu/Aneiang.Pa.BaiDu.csproj" />
-  <Project Path="Aneiang.Pa.Bilibili/Aneiang.Pa.Bilibili.csproj" />
-  <Project Path="Aneiang.Pa.Core/Aneiang.Pa.Core.csproj" />
-  <Project Path="Aneiang.Pa.Test/Aneiang.Pa.Test.csproj" />
-  <Project Path="Aneiang.Pa.WeiBo/Aneiang.Pa.WeiBo.csproj" />
-  <Project Path="Aneiang.Pa.ZhiHu/Aneiang.Pa.ZhiHu.csproj" />
-  <Project Path="Aneiang.Pa/Aneiang.Pa.csproj" />
+  <Folder Name="/docments/" />
+  <Folder Name="/src/">
+    <Project Path="src/Aneiang.Pa/Aneiang.Pa.csproj" />
+    <Project Path="src/Aneiang.Pa.Core/Aneiang.Pa.Core.csproj" />
+    <Project Path="src/Aneiang.Pa.BaiDu/Aneiang.Pa.BaiDu.csproj" />
+    <Project Path="src/Aneiang.Pa.WeiBo/Aneiang.Pa.WeiBo.csproj" />
+    <Project Path="src/Aneiang.Pa.ZhiHu/Aneiang.Pa.ZhiHu.csproj" />
+    <Project Path="src/Aneiang.Pa.Bilibili/Aneiang.Pa.Bilibili.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Aneiang.Pa.Demo/Aneiang.Pa.Demo.csproj" />
+  </Folder>
 </Solution>

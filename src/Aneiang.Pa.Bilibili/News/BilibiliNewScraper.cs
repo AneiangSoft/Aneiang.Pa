@@ -1,27 +1,27 @@
-﻿using Aneiang.Pa.Core.Data;
-using Aneiang.Pa.Core.News.Models;
-using Aneiang.Pa.ZhiHu.Models;
-using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Aneiang.Pa.Bilibili.Models;
+using Aneiang.Pa.Core.Data;
+using Aneiang.Pa.Core.News.Models;
+using Microsoft.Extensions.Options;
 
-namespace Aneiang.Pa.ZhiHu.News
+namespace Aneiang.Pa.Bilibili.News
 {
     /// <summary>
     /// 微博热门
     /// </summary>
-    public class ZhiHuNewScraper : IZhiHuNewScraper
+    public class BilibiliNewScraper : IBilibiliNewScraper
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ZhiHuScraperOptions _options;
+        private readonly BilibiliScraperOptions _options;
         /// <summary>
         /// 微博热门
         /// </summary>
         /// <param name="httpClientFactory"></param>
         /// <param name="options"></param>
-        public ZhiHuNewScraper(IHttpClientFactory httpClientFactory, IOptions<ZhiHuScraperOptions> options)
+        public BilibiliNewScraper(IHttpClientFactory httpClientFactory, IOptions<BilibiliScraperOptions> options)
         {
             _httpClientFactory = httpClientFactory;
             _options = options.Value;
@@ -30,7 +30,7 @@ namespace Aneiang.Pa.ZhiHu.News
         /// <summary>
         /// 标识
         /// </summary>
-        public string Source => "ZhiHu";
+        public string Source => "Bilibili";
 
 
         /// <summary>
@@ -43,27 +43,24 @@ namespace Aneiang.Pa.ZhiHu.News
             {
                 _options.Check();
                 var client = _httpClientFactory.CreateClient();
-                client.DefaultRequestHeaders.Referrer = new Uri(_options.NewsUrl);
+                client.DefaultRequestHeaders.Referrer = new Uri(_options.SearchUrl);
                 var newsResult = new NewsResult();
-                var response = await client.GetAsync(_options.NewsUrl);
+                var response = await client.GetAsync(_options.SearchUrl);
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    var result = JsonSerializer.Deserialize<ZhiHuOriginalResult>(jsonString);
+                    var result = JsonSerializer.Deserialize<BilibiliSearchOriginalResult>(jsonString);
                     if (result == null) return newsResult;
-                    foreach (var item in result.data)
+                    foreach (var item in result.list)
                     {
                         var newsItem = new NewsItem
                         {
-                            Id = item.card_id,
-                            Title = item.target.title_area.text,
-                            Url = item.target.link.url,
-                            MobileUrl = item.target.link.url,
+                            Id = item.keyword,
+                            Title = item.show_name,
+                            Url = $"https://search.bilibili.com/all?keyword={Uri.EscapeUriString(item.keyword)}",
+                            MobileUrl = $"https://search.bilibili.com/all?keyword={Uri.EscapeUriString(item.keyword)}"
                         };
-                        newsItem.SetProperty("Desc", item.target.excerpt_area);
-                        newsItem.SetProperty("ImageUrl", item.target.image_area.url);
-                        newsItem.SetProperty("AnswerCount", item.feed_specific.answer_count);
-                        newsItem.SetProperty("Metrics", item.target.metrics_area.text);
+                        newsItem.SetOriginal(item);
                         newsResult.Data.Add(newsItem);
                     }
                 }

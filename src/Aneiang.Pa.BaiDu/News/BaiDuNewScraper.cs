@@ -80,7 +80,7 @@ namespace Aneiang.Pa.BaiDu.News
                             Title = k.word,
                             Url = k.rawUrl,
                         };
-                        newsItem.SetProperty("Original", k);
+                        newsItem.SetOriginal(k);
                         return newsItem;
                     })
                     .ToList();
