@@ -1,19 +1,17 @@
 ﻿// Program.cs
 
-using Aneiang.Pa.Core.Data;
-using Aneiang.Pa.Core.News;
 using Aneiang.Pa.Data;
 using Aneiang.Pa.Extensions;
 using Aneiang.Pa.News;
-using Aneiang.Pa.WeiBo.Extensions;
-using Aneiang.Pa.ZhiHu.News;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureHostConfiguration(a=>a.AddJsonFile("appsettings.json"))
     .ConfigureServices((context, services) =>
     {
-        services.AddNewsScraper();
+        services.AddNewsScraper(context.Configuration);
     })
     .Build();
 
@@ -21,7 +19,7 @@ var builder = Host.CreateDefaultBuilder(args)
 using (var scope = builder.Services.CreateScope())
 {
     var newsScraperFactory = scope.ServiceProvider.GetRequiredService<INewsScraperFactory>();
-    var newsScraper = newsScraperFactory.GetScraper(NewsSource.ZhiHu);
+    var newsScraper = newsScraperFactory.GetScraper(NewsSource.WeiBo);
     var newsResult = await newsScraper.GetNewsAsync();
     foreach (var news in newsResult.Data)
     {

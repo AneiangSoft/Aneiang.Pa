@@ -12,11 +12,6 @@ namespace Aneiang.Pa.Core.News
     public interface INewsScraper
     {
         /// <summary>
-        /// 地址
-        /// </summary>
-        string BaseUrl { get; }
-
-        /// <summary>
         /// 标识
         /// </summary>
         string Source { get; }

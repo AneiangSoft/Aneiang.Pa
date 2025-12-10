@@ -1,12 +1,11 @@
-﻿using Aneiang.Pa.Core.News;
+﻿using Aneiang.Pa.Core.Data;
 using Aneiang.Pa.Core.News.Models;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Aneiang.Pa.Core.Data;
+using Aneiang.Pa.WeiBo.Models;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Options;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Aneiang.Pa.WeiBo.News
 {
@@ -16,20 +15,18 @@ namespace Aneiang.Pa.WeiBo.News
     public class WeiBoNewScraper : IWeiBoNewScraper
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly WeiBoScraperOptions _options;
 
         /// <summary>
         /// 微博热门
         /// </summary>
         /// <param name="httpClientFactory"></param>
-        public WeiBoNewScraper(IHttpClientFactory httpClientFactory)
+        /// <param name="options"></param>
+        public WeiBoNewScraper(IHttpClientFactory httpClientFactory, IOptions<WeiBoScraperOptions> options)
         {
             _httpClientFactory = httpClientFactory;
+            _options = options.Value;
         }
-
-        /// <summary>
-        /// 爬取地址
-        /// </summary>
-        public string BaseUrl => "https://s.weibo.com/top/summary?cate=realtimehot";
 
         /// <summary>
         /// 标识
@@ -42,11 +39,12 @@ namespace Aneiang.Pa.WeiBo.News
 
         public async Task<NewsResult> GetNewsAsync()
         {
+            _options.Check();
             var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36");
-            client.DefaultRequestHeaders.Add("Cookie", "SUB=_2AkMWIuNSf8NxqwJRmP8dy2rhaoV2ygrEieKgfhKJJRMxHRl-yT9jqk86tRB6PaLNvQZR6zYUcYVT1zSjoSreQHidcUq7");
-            client.DefaultRequestHeaders.Referrer = new Uri(BaseUrl);
-            var html = await client.GetStringAsync(BaseUrl);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(_options.UserAgent);
+            client.DefaultRequestHeaders.Add("Cookie", _options.Cookie);
+            client.DefaultRequestHeaders.Referrer = new Uri(_options.BaseUrl);
+            var html = await client.GetStringAsync($"{_options.BaseUrl}{_options.NewsUrl}");
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
 
@@ -84,8 +82,8 @@ namespace Aneiang.Pa.WeiBo.News
                         {
                             Id = title,
                             Title = title,
-                            Url = $"{BaseUrl}{href}",
-                            MobileUrl = $"{BaseUrl}{href}"
+                            Url = $"{_options.BaseUrl}{href}",
+                            MobileUrl = $"{_options.BaseUrl}{href}"
                         };
                         newsItem.SetProperty("Icon", flagUrl);
                         newsResult.Data.Add(newsItem);

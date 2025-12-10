@@ -1,7 +1,7 @@
 ﻿using Aneiang.Pa.Core.Data;
-using Aneiang.Pa.Core.News;
 using Aneiang.Pa.Core.News.Models;
 using Aneiang.Pa.ZhiHu.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;
 using System.Text.Json;
@@ -15,22 +15,17 @@ namespace Aneiang.Pa.ZhiHu.News
     public class ZhiHuNewScraper : IZhiHuNewScraper
     {
         private readonly IHttpClientFactory _httpClientFactory;
-
+        private readonly ZhiHuScraperOptions _options;
         /// <summary>
         /// 微博热门
         /// </summary>
         /// <param name="httpClientFactory"></param>
-        public ZhiHuNewScraper(IHttpClientFactory httpClientFactory)
+        /// <param name="options"></param>
+        public ZhiHuNewScraper(IHttpClientFactory httpClientFactory,IOptions<ZhiHuScraperOptions> options)
         {
             _httpClientFactory = httpClientFactory;
+            _options = options.Value;
         }
-
-        /// <summary>
-        /// 爬取地址
-        /// </summary>
-        //public string BaseUrl => "https://www.zhihu.com/api/v3/feed/topstory/hot-list-web?limit=20&desktop=true";
-
-        public string BaseUrl => "http://127.0.0.1:5500/hot-list-web.json";
 
         /// <summary>
         /// 标识
@@ -44,10 +39,11 @@ namespace Aneiang.Pa.ZhiHu.News
 
         public async Task<NewsResult> GetNewsAsync()
         {
+            _options.Check();
             var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Referrer = new Uri(BaseUrl);
+            client.DefaultRequestHeaders.Referrer = new Uri(_options.NewsUrl);
             var newsResult = new NewsResult();
-            var response = await client.GetAsync(BaseUrl);
+            var response = await client.GetAsync(_options.NewsUrl);
             if (response.IsSuccessStatusCode)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
