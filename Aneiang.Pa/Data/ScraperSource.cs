@@ -4,9 +4,10 @@ using System.Text;
 
 namespace Aneiang.Pa.Data
 {
-    public enum NewsSource
+    public enum ScraperSource
     {
         WeiBo,
-        ZhiHu
+        ZhiHu,
+        Bilibili
     }
 }

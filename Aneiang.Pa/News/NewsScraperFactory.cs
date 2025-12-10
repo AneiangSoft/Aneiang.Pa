@@ -27,7 +27,7 @@ namespace Aneiang.Pa.News
         /// <param name="source"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public INewsScraper GetScraper(NewsSource source)
+        public INewsScraper GetScraper(ScraperSource source)
         {
             if (_scraperMap.TryGetValue(source.ToString(), out var scraper)) return scraper;
             throw new ArgumentException($"No scraper registered for source: {source}");
@@ -44,6 +44,6 @@ namespace Aneiang.Pa.News
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        INewsScraper GetScraper(NewsSource source);
+        INewsScraper GetScraper(ScraperSource source);
     }
 }

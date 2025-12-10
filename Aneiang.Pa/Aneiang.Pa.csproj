@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Aneiang.Pa.Bilibili\Aneiang.Pa.Bilibili.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.WeiBo\Aneiang.Pa.WeiBo.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.ZhiHu\Aneiang.Pa.ZhiHu.csproj" />
   </ItemGroup>

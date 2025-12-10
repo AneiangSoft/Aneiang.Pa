@@ -12,7 +12,6 @@ namespace Aneiang.Pa.WeiBo.Models
         public void Check()
         {
             if (string.IsNullOrWhiteSpace(Cookie)
-                || string.IsNullOrWhiteSpace(UserAgent)
                 || string.IsNullOrWhiteSpace(NewsUrl)
                 || string.IsNullOrWhiteSpace(BaseUrl))
             {

@@ -19,7 +19,7 @@ var builder = Host.CreateDefaultBuilder(args)
 using (var scope = builder.Services.CreateScope())
 {
     var newsScraperFactory = scope.ServiceProvider.GetRequiredService<INewsScraperFactory>();
-    var newsScraper = newsScraperFactory.GetScraper(NewsSource.WeiBo);
+    var newsScraper = newsScraperFactory.GetScraper(ScraperSource.Bilibili);
     var newsResult = await newsScraper.GetNewsAsync();
     foreach (var news in newsResult.Data)
     {
