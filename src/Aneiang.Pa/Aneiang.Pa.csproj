@@ -15,6 +15,7 @@
     <ProjectReference Include="..\Aneiang.Pa.Bilibili\Aneiang.Pa.Bilibili.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.DouYin\Aneiang.Pa.DouYin.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.HuPu\Aneiang.Pa.HuPu.csproj" />
+    <ProjectReference Include="..\Aneiang.Pa.JueJin\Aneiang.Pa.JueJin.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.Tencent\Aneiang.Pa.Tencent.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.TouTiao\Aneiang.Pa.TouTiao.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.WeiBo\Aneiang.Pa.WeiBo.csproj" />

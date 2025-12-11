@@ -1,9 +1,9 @@
-﻿using Aneiang.Pa.HuPu.Models;
-using Aneiang.Pa.HuPu.News;
+﻿using Aneiang.Pa.JueJin.Models;
+using Aneiang.Pa.JueJin.News;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aneiang.Pa.HuPu.Extensions
+namespace Aneiang.Pa.JueJin.Extensions
 {
     public static class ServiceCollectionExtensions
     {
@@ -12,14 +12,14 @@ namespace Aneiang.Pa.HuPu.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        public static void AddHuPuScraper(this IServiceCollection services, IConfiguration? configuration = null)
+        public static void AddJueJinScraper(this IServiceCollection services, IConfiguration? configuration = null)
         {
             if (configuration != null)
             {
-                services.Configure<HuPuScraperOptions>(configuration.GetSection("Scraper:TouTiao"));
+                services.Configure<JueJinScraperOptions>(configuration.GetSection("Scraper:JueJin"));
             }
             services.AddHttpClient();
-            services.AddSingleton<IHuPuNewScraper, HuPuNewScraper>();
+            services.AddSingleton<IJueJinNewScraper, JueJinNewScraper>();
         }
     }
 }

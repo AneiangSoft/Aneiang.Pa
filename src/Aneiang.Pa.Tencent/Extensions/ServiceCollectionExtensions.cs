@@ -8,7 +8,7 @@ namespace Aneiang.Pa.Tencent.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// 注册爬取器
+        /// 注册爬虫
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>

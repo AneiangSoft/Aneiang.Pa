@@ -7,6 +7,8 @@ using Aneiang.Pa.DouYin.Models;
 using Aneiang.Pa.DouYin.News;
 using Aneiang.Pa.HuPu.Models;
 using Aneiang.Pa.HuPu.News;
+using Aneiang.Pa.JueJin.Models;
+using Aneiang.Pa.JueJin.News;
 using Aneiang.Pa.News;
 using Aneiang.Pa.Tencent.Models;
 using Aneiang.Pa.Tencent.News;
@@ -40,6 +42,7 @@ namespace Aneiang.Pa.Extensions
                 services.Configure<TouTiaoScraperOptions>(configuration.GetSection("Scraper:TouTiao"));
                 services.Configure<HuPuScraperOptions>(configuration.GetSection("Scraper:HuPu"));
                 services.Configure<TencentScraperOptions>(configuration.GetSection("Scraper:Tencent"));
+                services.Configure<JueJinScraperOptions>(configuration.GetSection("Scraper:JueJin"));
             }
 
             services.AddHttpClient();
@@ -51,6 +54,7 @@ namespace Aneiang.Pa.Extensions
             services.AddSingleton<ITouTiaoNewScraper, TouTiaoNewScraper>();
             services.AddSingleton<IHuPuNewScraper, HuPuNewScraper>();
             services.AddSingleton<ITencentNewScraper, TencentNewScraper>();
+            services.AddSingleton<IJueJinNewScraper, JueJinNewScraper>();
 
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IWeiBoNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IZhiHuNewScraper>());
@@ -60,6 +64,7 @@ namespace Aneiang.Pa.Extensions
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<ITouTiaoNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IHuPuNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<ITencentNewScraper>());
+            services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IJueJinNewScraper>());
 
             services.AddSingleton<INewsScraperFactory, NewsScraperFactory>();
         }

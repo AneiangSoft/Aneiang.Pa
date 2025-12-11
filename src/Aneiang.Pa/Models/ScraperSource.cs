@@ -33,6 +33,10 @@
         /// <summary>
         /// 腾讯
         /// </summary>
-        Tencent
+        Tencent,
+        /// <summary>
+        /// 掘金
+        /// </summary>
+        JueJin
     }
 }
