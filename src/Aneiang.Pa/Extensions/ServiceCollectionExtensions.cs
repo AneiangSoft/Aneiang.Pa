@@ -9,6 +9,8 @@ using Aneiang.Pa.DouYin.Models;
 using Aneiang.Pa.DouYin.News;
 using Aneiang.Pa.HuPu.Models;
 using Aneiang.Pa.HuPu.News;
+using Aneiang.Pa.IFeng.Models;
+using Aneiang.Pa.IFeng.News;
 using Aneiang.Pa.JueJin.Models;
 using Aneiang.Pa.JueJin.News;
 using Aneiang.Pa.News;
@@ -49,6 +51,7 @@ namespace Aneiang.Pa.Extensions
                 services.Configure<JueJinScraperOptions>(configuration.GetSection("Scraper:JueJin"));
                 services.Configure<ThePaperScraperOptions>(configuration.GetSection("Scraper:ThePaper"));
                 services.Configure<DouBanScraperOptions>(configuration.GetSection("Scraper:DouBan"));
+                services.Configure<IFengScraperOptions>(configuration.GetSection("Scraper:IFeng"));
             }
 
             services.AddHttpClient();
@@ -63,6 +66,7 @@ namespace Aneiang.Pa.Extensions
             services.AddSingleton<IJueJinNewScraper, JueJinNewScraper>();
             services.AddSingleton<IThePaperNewScraper, ThePaperNewScraper>();
             services.AddSingleton<IDouBanNewScraper, DouBanNewScraper>();
+            services.AddSingleton<IIFengNewScraper, IFengNewScraper>();
 
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IWeiBoNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IZhiHuNewScraper>());
@@ -74,7 +78,8 @@ namespace Aneiang.Pa.Extensions
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<ITencentNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IJueJinNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IThePaperNewScraper>());
-            services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IDouBanNewScraper>());
+            services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IDouBanNewScraper>()); 
+            services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IIFengNewScraper>());
 
             services.AddSingleton<INewsScraperFactory, NewsScraperFactory>();
         }

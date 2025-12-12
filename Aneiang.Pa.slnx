@@ -10,6 +10,7 @@
     <Project Path="src/Aneiang.Pa.DouBan/Aneiang.Pa.DouBan.csproj" Id="47ba9b4e-4825-4861-a7bb-58123f6a5aac" />
     <Project Path="src/Aneiang.Pa.DouYin/Aneiang.Pa.DouYin.csproj" />
     <Project Path="src/Aneiang.Pa.HuPu/Aneiang.Pa.HuPu.csproj" Id="d7a43233-b1f9-4d85-a5a8-dca9a0651f6a" />
+    <Project Path="src/Aneiang.Pa.IFeng/Aneiang.Pa.IFeng.csproj" Id="68956e5f-734e-40c7-9265-89919addae1a" />
     <Project Path="src/Aneiang.Pa.JueJin/Aneiang.Pa.JueJin.csproj" Id="c8a36660-63e8-4eb8-a499-11661e8819e9" />
     <Project Path="src/Aneiang.Pa.Tencent/Aneiang.Pa.Tencent.csproj" Id="e5a579e9-7aa2-4772-8e72-71492dbfd7da" />
     <Project Path="src/Aneiang.Pa.ThePaper/Aneiang.Pa.ThePaper.csproj" Id="695faad6-46bc-4339-a3e3-71e061d027df" />

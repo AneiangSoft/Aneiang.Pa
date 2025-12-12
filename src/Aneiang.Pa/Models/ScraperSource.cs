@@ -45,6 +45,10 @@
         /// <summary>
         /// 豆瓣
         /// </summary>
-        DouBan
+        DouBan,
+        /// <summary>
+        /// 凤凰网
+        /// </summary>
+        IFeng
     }
 }
