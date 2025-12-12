@@ -41,6 +41,10 @@
         /// <summary>
         /// 澎湃
         /// </summary>
-        ThePaper
+        ThePaper,
+        /// <summary>
+        /// 豆瓣
+        /// </summary>
+        DouBan
     }
 }

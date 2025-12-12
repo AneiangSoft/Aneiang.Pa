@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Aneiang.Pa.BaiDu\Aneiang.Pa.BaiDu.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.Bilibili\Aneiang.Pa.Bilibili.csproj" />
+    <ProjectReference Include="..\Aneiang.Pa.DouBan\Aneiang.Pa.DouBan.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.DouYin\Aneiang.Pa.DouYin.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.HuPu\Aneiang.Pa.HuPu.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.JueJin\Aneiang.Pa.JueJin.csproj" />
