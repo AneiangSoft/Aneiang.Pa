@@ -12,8 +12,8 @@
     <Authors>AneiangSoft</Authors>
     <Company>AneiangSoft</Company>
     <Product>Aneiang.Pa</Product>
-    <Version>1.0.6</Version>
-    <PackageIcon>icon.jpg</PackageIcon>
+    <Version>1.0.7</Version>
+    <PackageIcon>icon.png</PackageIcon>
     <Description>.NET 多平台热门新闻/热榜爬虫库。</Description>
     <PackageDescription>.NET 多平台热门新闻/热榜爬虫库。</PackageDescription>
     <PackageProjectUrl>https://github.com/AneiangSoft/Pa</PackageProjectUrl>
@@ -36,7 +36,7 @@
   <!-- 将根目录 README.md 打入所有包 -->
   <ItemGroup Condition="'$(MSBuildProjectName)'!='Aneiang.Pa.Demo' and !$(MSBuildProjectName.Contains('Test'))">
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" />
-    <None Include="$(MSBuildThisFileDirectory)assets\icon.jpg" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)assets\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
 
