@@ -14,14 +14,14 @@
 ## 安装（NuGet）
 推荐聚合包（含全部平台）：
 ```bash
-dotnet add package Aneiang.Pa --version 1.0.6
+dotnet add package Aneiang.Pa --version 1.0.7
 ```
 按需引用单个包（示例）：
 ```bash
-dotnet add package Aneiang.Pa.BaiDu --version 1.0.6
+dotnet add package Aneiang.Pa.BaiDu --version 1.0.7
 ```
 
-### 已发布包（nuget.org，当前版本 1.0.6）
+### 已发布包
 | Package | 说明 |
 | --- | --- |
 | Aneiang.Pa | 聚合包，包含全部平台实现 |
