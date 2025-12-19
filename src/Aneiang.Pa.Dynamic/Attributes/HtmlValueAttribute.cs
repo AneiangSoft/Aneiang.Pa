@@ -34,6 +34,11 @@ namespace Aneiang.Pa.Dynamic.Attributes
         public string? HtmlClass { get; set; }
 
         /// <summary>
+        /// 是否移除所有制表符
+        /// </summary>
+        public bool IsTrim { get; set; } = true;
+
+        /// <summary>
         /// 存在多个，需要指定索引
         /// </summary>
         public int Index { get; set; }

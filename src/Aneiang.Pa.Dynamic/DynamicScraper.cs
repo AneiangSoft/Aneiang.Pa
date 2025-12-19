@@ -84,6 +84,7 @@ namespace Aneiang.Pa.Dynamic
                         var value = string.IsNullOrWhiteSpace(valueAttribute.HtmlAttribute)
                             ? valueNode?.InnerText
                             : valueNode?.GetAttributeValue<string>(valueAttribute.HtmlAttribute, "");
+                        if (value != null && valueAttribute.IsTrim) value = value.Trim();
                         propertyAttr.Key.SetPropertyValue(instance, value ?? "");
                     }
                     list.Add(instance);
