@@ -2,6 +2,8 @@
     <img src="assets/logo.png" alt="Aneiang.Pa" width="600" style="vertical-align:middle;border-radius:8px;">
 </p>
 
+中文 | [English](README.en.md)
+
 [![NuGet](https://img.shields.io/nuget/v/Aneiang.Pa.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/Aneiang.Pa)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Aneiang.Pa.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/Aneiang.Pa)
 [![Target](https://img.shields.io/badge/target-netstandard2.1-blue?style=flat-square)](#)
