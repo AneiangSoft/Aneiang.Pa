@@ -41,10 +41,10 @@ namespace Aneiang.Pa.Dynamic
 
                 var type = typeof(T);
                 var htmlContainerAttribute = type.GetCustomAttribute<HtmlContainerAttribute>();
-                if (htmlContainerAttribute == null || string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlTag))
+                if (htmlContainerAttribute == null || string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlTag) || string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlXPath))
                     throw new Exception("HtmlContainer Attribute is not set");
                 var htmlItemAttribute = type.GetCustomAttribute<HtmlItemAttribute>();
-                if (htmlItemAttribute == null || string.IsNullOrWhiteSpace(htmlItemAttribute.HtmlTag))
+                if (htmlItemAttribute == null || string.IsNullOrWhiteSpace(htmlItemAttribute.HtmlTag) || string.IsNullOrWhiteSpace(htmlItemAttribute.HtmlXPath))
                     throw new Exception("HtmlItem Attribute is not set");
 
                 var containerXpath = BuildXPath(htmlContainerAttribute);
@@ -68,7 +68,7 @@ namespace Aneiang.Pa.Dynamic
                     {
                         HtmlNode valueNode;
                         var valueAttribute = propertyAttr.Value;
-                        if (valueAttribute == null || string.IsNullOrWhiteSpace(valueAttribute.HtmlTag))
+                        if (valueAttribute == null || string.IsNullOrWhiteSpace(valueAttribute.HtmlTag) || string.IsNullOrWhiteSpace(valueAttribute.HtmlXPath))
                             throw new Exception("HtmlValue Attribute is not set");
 
                         if (valueAttribute.HtmlTag == ".")
@@ -109,35 +109,57 @@ namespace Aneiang.Pa.Dynamic
             var htmlClass = "";
             var index = 0;
 
-            if (attribute is HtmlContainerAttribute htmlContainerAttribute)
+            switch (attribute)
             {
-                xpath = $"//{htmlContainerAttribute.HtmlTag}";
-                htmlId = htmlContainerAttribute.HtmlId;
-                htmlClass = htmlContainerAttribute.HtmlClass;
-                index = htmlContainerAttribute.Index;
-            }
-            if (attribute is HtmlItemAttribute htmlItemAttribute)
-            {
-                xpath = $".//{htmlItemAttribute.HtmlTag}";
-                htmlId = htmlItemAttribute.HtmlId;
-                htmlClass = htmlItemAttribute.HtmlClass;
-                index = htmlItemAttribute.Index;
-            }
-            if (attribute is HtmlValueAttribute htmlValueAttribute)
-            {
-                xpath = $".//{htmlValueAttribute.HtmlTag}";
-                htmlId = htmlValueAttribute.HtmlId;
-                htmlClass = htmlValueAttribute.HtmlClass;
-                index = htmlValueAttribute.Index;
+                case HtmlContainerAttribute htmlContainerAttribute:
+                {
+                    if (!string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlXPath))
+                    {
+                        return htmlContainerAttribute.HtmlXPath;
+                    }
+                    xpath = $"//{htmlContainerAttribute.HtmlTag}";
+                    htmlId = htmlContainerAttribute.HtmlId;
+                    htmlClass = htmlContainerAttribute.HtmlClass;
+                    index = htmlContainerAttribute.Index;
+                    break;
+                }
+                case HtmlItemAttribute htmlItemAttribute:
+                {
+                    if (!string.IsNullOrWhiteSpace(htmlItemAttribute.HtmlXPath))
+                    {
+                        return htmlItemAttribute.HtmlXPath;
+                    }
+                    xpath = $".//{htmlItemAttribute.HtmlTag}";
+                    htmlId = htmlItemAttribute.HtmlId;
+                    htmlClass = htmlItemAttribute.HtmlClass;
+                    index = htmlItemAttribute.Index;
+                    break;
+                }
+                case HtmlValueAttribute htmlValueAttribute:
+                {
+                    if (!string.IsNullOrWhiteSpace(htmlValueAttribute.HtmlXPath))
+                    {
+                        return htmlValueAttribute.HtmlXPath;
+                    }
+                    xpath = $".//{htmlValueAttribute.HtmlTag}";
+                    htmlId = htmlValueAttribute.HtmlId;
+                    htmlClass = htmlValueAttribute.HtmlClass;
+                    index = htmlValueAttribute.Index;
+                    break;
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(htmlId))
             {
-                containsXpath = $"contains(@id, '{htmlId}') and";
+                containsXpath = $"@id='{htmlId}' and";
             }
             if (!string.IsNullOrWhiteSpace(htmlClass))
             {
-                containsXpath = $"contains(@class, '{htmlClass}') and";
+                var classList = htmlClass.Trim().Split(" ");
+                foreach (var c in classList)
+                {
+                    containsXpath+= $"@class='{c}' and";
+                }
             }
 
             if (containsXpath.EndsWith("and"))

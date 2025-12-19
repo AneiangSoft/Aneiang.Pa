@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aneiang.Pa.Dynamic.Attributes
 {
@@ -11,9 +9,14 @@ namespace Aneiang.Pa.Dynamic.Attributes
     public class HtmlItemAttribute : Attribute
     {
         /// <summary>
+        /// HTML XPath
+        /// </summary>
+        public string? HtmlXPath { get; set; }
+
+        /// <summary>
         /// HTML标签
         /// </summary>
-        public string HtmlTag { get; set; }
+        public string? HtmlTag { get; set; }
 
         /// <summary>
         /// HTML Id
@@ -34,11 +37,13 @@ namespace Aneiang.Pa.Dynamic.Attributes
         /// 数据项特性
         /// </summary>
         /// <param name="htmlTag">HTML标签</param>
+        /// <param name="htmlXPath">HTML XPath</param>
         /// <param name="htmlId">HTML Id</param>
         /// <param name="htmlClass">HTML Class</param>
         /// <param name="index">存在多个，需要指定索引</param>
-        public HtmlItemAttribute(string htmlTag, string? htmlId = null, string? htmlClass = null, int index = 0)
+        public HtmlItemAttribute(string? htmlTag = null, string? htmlXPath = null, string? htmlId = null, string? htmlClass = null, int index = 0)
         {
+            HtmlXPath = htmlXPath;
             HtmlTag = htmlTag;
             HtmlId = htmlId;
             HtmlClass = htmlClass;

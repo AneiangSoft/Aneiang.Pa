@@ -65,7 +65,7 @@ async Task DynamicScraper()
     using (var scope = builder.Services.CreateScope())
     {
         var scraperFactory = scope.ServiceProvider.GetRequiredService<IDynamicScraper>();
-        var testDataSets = await scraperFactory.DatasetScraper<TestDataSet>("https://www.coderutil.com");
+        var testDataSets = await scraperFactory.DatasetScraper<TestDataSet>("https://www.de62.com/listinfo-16-0.html");
         foreach (var testDataSet in testDataSets)
         {
             Console.WriteLine($"Title: {testDataSet.Title}");
@@ -79,19 +79,19 @@ async Task DynamicScraper()
 }
 
 
-[HtmlContainer("div", htmlClass: "right-manual-tab-content", index: 1)]
-[HtmlItem("a")]
+[HtmlContainer("div", htmlClass: "blogs-list", index: 1)]
+[HtmlItem("li")]
 public class TestDataSet
 {
-    [HtmlValue("p/b")]
+    [HtmlValue("h2/a")]
     public string Title { get; set; }
 
-    [HtmlValue(".", "href")]
+    [HtmlValue("h2/a", attribute: "href")]
     public string Url { get; set; }
 
-    [HtmlValue("img", "src")]
+    [HtmlValue("i/a/img", attribute: "src")]
     public string Icon { get; set; }
 
-    [HtmlValue("p",htmlClass: "web-page-module-link-card-desc")]
+    [HtmlValue("p")]
     public string Desc { get; set; }
 }

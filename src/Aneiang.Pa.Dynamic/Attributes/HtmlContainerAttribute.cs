@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aneiang.Pa.Dynamic.Attributes
 {
@@ -11,9 +9,14 @@ namespace Aneiang.Pa.Dynamic.Attributes
     public class HtmlContainerAttribute : Attribute
     {
         /// <summary>
+        /// HTML XPath
+        /// </summary>
+        public string? HtmlXPath { get; set; }
+
+        /// <summary>
         /// HTML容器标签
         /// </summary>
-        public string HtmlTag { get; set; }
+        public string? HtmlTag { get; set; }
 
         /// <summary>
         /// HTML Id
@@ -34,11 +37,13 @@ namespace Aneiang.Pa.Dynamic.Attributes
         /// 容器特性
         /// </summary>
         /// <param name="htmlTag">HTML标签</param>
+        /// <param name="htmlXPath">Html XPath</param>
         /// <param name="htmlId">HTML Id</param>
         /// <param name="htmlClass">HTML Class</param>
         /// <param name="index">存在多个，需要指定索引,从1开始</param>
-        public HtmlContainerAttribute(string htmlTag, string? htmlId = null, string? htmlClass = null, int index = 0)
+        public HtmlContainerAttribute(string? htmlTag = null, string? htmlXPath = null, string? htmlId = null, string? htmlClass = null, int index = 0)
         {
+            HtmlXPath = htmlXPath;
             HtmlTag = htmlTag;
             HtmlId = htmlId;
             HtmlClass = htmlClass;
