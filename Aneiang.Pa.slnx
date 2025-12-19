@@ -7,6 +7,7 @@
     <Project Path="src/Aneiang.Pa.BaiDu/Aneiang.Pa.BaiDu.csproj" />
     <Project Path="src/Aneiang.Pa.Bilibili/Aneiang.Pa.Bilibili.csproj" />
     <Project Path="src/Aneiang.Pa.Core/Aneiang.Pa.Core.csproj" />
+    <Project Path="src/Aneiang.Pa.Csdn/Aneiang.Pa.Csdn.csproj" Id="55c6a35b-94d4-4a07-bbe3-4210f37d7b84" />
     <Project Path="src/Aneiang.Pa.DouBan/Aneiang.Pa.DouBan.csproj" Id="47ba9b4e-4825-4861-a7bb-58123f6a5aac" />
     <Project Path="src/Aneiang.Pa.DouYin/Aneiang.Pa.DouYin.csproj" />
     <Project Path="src/Aneiang.Pa.Dynamic/Aneiang.Pa.Dynamic.csproj" Id="c4b1ad3a-78c0-463f-af1d-afa20174c6e1" />

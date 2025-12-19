@@ -34,7 +34,7 @@
   </PropertyGroup>
 
   <!-- 将根目录 README.md 打入所有包 -->
-  <ItemGroup Condition="'$(MSBuildProjectName)'!='Aneiang.Pa.Demo' and '$(MSBuildProjectName)'!='Aneiang.Pa.Dynamic' and !$(MSBuildProjectName.Contains('Test'))">
+  <ItemGroup Condition="'$(MSBuildProjectName)'!='Aneiang.Pa.Demo' and !$(MSBuildProjectName.Contains('Test'))">
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" />
     <None Include="$(MSBuildThisFileDirectory)assets\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>

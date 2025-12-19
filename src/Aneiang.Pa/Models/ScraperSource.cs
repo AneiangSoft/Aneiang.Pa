@@ -49,6 +49,10 @@
         /// <summary>
         /// 凤凰网
         /// </summary>
-        IFeng
+        IFeng,
+        /// <summary>
+        /// CSDN
+        /// </summary>
+        Csdn
     }
 }

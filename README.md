@@ -40,6 +40,7 @@ dotnet add package Aneiang.Pa.BaiDu
 | Aneiang.Pa.ThePaper | 澎湃热榜爬虫 |
 | Aneiang.Pa.DouBan | 豆瓣热榜爬虫 |
 | Aneiang.Pa.IFeng | 凤凰网热榜爬虫 |
+| Aneiang.Pa.Csdn | CSDN热榜爬虫 |
 | Aneiang.Pa.Dynamic | 动态爬虫 |
 
 ## 快速开始（本地 Demo）
