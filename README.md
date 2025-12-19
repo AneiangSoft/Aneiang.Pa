@@ -102,10 +102,10 @@ public class TestDataSet
     [HtmlValue("p/b")]
     public string Title { get; set; }
 
-    [HtmlValue(".", "href")]
+    [HtmlValue(".", attribute: "href")]
     public string Url { get; set; }
 
-    [HtmlValue("img", "src")]
+    [HtmlValue("img", attribute: "src")]
     public string Icon { get; set; }
 
     [HtmlValue("p", htmlClass: "card-desc")]
@@ -114,9 +114,11 @@ public class TestDataSet
 ```
 ### 特性说明
 
- - `HtmlContainerAttribute`：数据集容器特性，包含数据集标签的父级标签，可以不是直接父级，支持通过`id`、`class`查找，但无法通过`id`、`class`判断唯一的时候，可以通过设置`index`获取指定的HTML节点。
-- `HtmlItemAttribute`：数据项特性，每条数据对应的HTML标签属性，支持通过`id`、`class`查找，但无法通过`id`、`class`判断唯一的时候，可以通过设置`index`获取指定的HTML节点。
-- `HtmlValueAttribute`：数据值特性，每条数据，每个字段对应的HTML标签属性，支持通过`id`、`class`查找，但无法通过`id`、`class`判断唯一的时候，可以通过设置`index`获取指定的HTML节点；`htmlAttribute`字段指定从哪个html特性中获取值。
+- `HtmlContainerAttribute`：数据集容器特性，包含数据集标签的父级标签，可以不是直接父级，支持通过`id`、`class`查找，当无法通过`id`、`class`判断唯一的时候，可以通过设置`index`获取指定的HTML节点。
+- `HtmlItemAttribute`：数据项特性，每条数据对应的HTML标签属性，支持通过`id`、`class`查找，当无法通过`id`、`class`判断唯一的时候，可以通过设置`index`获取指定的HTML节点。
+- `HtmlValueAttribute`：数据值特性，每条数据，每个字段对应的HTML标签属性，支持通过`id`、`class`查找，当无法通过`id`、`class`判断唯一的时候，可以通过设置`index`获取指定的HTML节点；`htmlAttribute`字段指定从哪个html特性中获取值。
+
+**PS:以上三个特性都支持XPath检索HTML标签，`HTMLXPath`不为空时，其他属性都不生效**
 
 #### HtmlTag参数解析
 
