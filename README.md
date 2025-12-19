@@ -77,8 +77,9 @@ var scraper = scope.ServiceProvider.GetRequiredService<IBaiDuNewScraper>();
 var result = await scraper.GetNewsAsync();
 ```
 
-## 高阶用法
-对于通用的数据集爬取，提供了单独的SDK - Aneiang.Pa.Dynamic
+## ✨ 高阶用法 - 动态爬取（Aneiang.Pa.Dynamic）
+
+**除了基础的热门数据爬取外，还提供了更加灵活、轻量、独立的爬虫库 - Aneiang.Pa.Dynamic，可以做到爬取任意网站的数据集合。**
 
 ### 引入Nuget
 ```bash
