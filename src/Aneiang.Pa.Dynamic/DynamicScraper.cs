@@ -41,10 +41,10 @@ namespace Aneiang.Pa.Dynamic
 
                 var type = typeof(T);
                 var htmlContainerAttribute = type.GetCustomAttribute<HtmlContainerAttribute>();
-                if (htmlContainerAttribute == null || string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlTag) || string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlXPath))
+                if (htmlContainerAttribute == null || (string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlTag) && string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlXPath)))
                     throw new Exception("HtmlContainer Attribute is not set");
                 var htmlItemAttribute = type.GetCustomAttribute<HtmlItemAttribute>();
-                if (htmlItemAttribute == null || string.IsNullOrWhiteSpace(htmlItemAttribute.HtmlTag) || string.IsNullOrWhiteSpace(htmlItemAttribute.HtmlXPath))
+                if (htmlItemAttribute == null || (string.IsNullOrWhiteSpace(htmlItemAttribute.HtmlTag) && string.IsNullOrWhiteSpace(htmlItemAttribute.HtmlXPath)))
                     throw new Exception("HtmlItem Attribute is not set");
 
                 var containerXpath = BuildXPath(htmlContainerAttribute);
@@ -68,7 +68,7 @@ namespace Aneiang.Pa.Dynamic
                     {
                         HtmlNode valueNode;
                         var valueAttribute = propertyAttr.Value;
-                        if (valueAttribute == null || string.IsNullOrWhiteSpace(valueAttribute.HtmlTag) || string.IsNullOrWhiteSpace(valueAttribute.HtmlXPath))
+                        if (valueAttribute == null || (string.IsNullOrWhiteSpace(valueAttribute.HtmlTag) && string.IsNullOrWhiteSpace(valueAttribute.HtmlXPath)))
                             throw new Exception("HtmlValue Attribute is not set");
 
                         if (valueAttribute.HtmlTag == ".")

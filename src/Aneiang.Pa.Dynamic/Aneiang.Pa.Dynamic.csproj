@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>1.1.1</Version>
+    <Version>1.1.1.1</Version>
     <Description>.NET 动态爬虫库</Description>
     <PackageTags>news;scraper;spider</PackageTags>
   </PropertyGroup>
