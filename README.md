@@ -202,6 +202,8 @@ public class CnBlogOriginalResult
 
 #### HtmlTag参数解析
 
+`HtmlTag` 和 `HTMLXPath` 底层基于`XPath`规则开发，更多信息可查阅`XPath`相关文档。
+
 | 选择器 | 匹配结构 | 示例 |
 | --- | --- | --- |
 | `p/b` | p直接包含b | `<p><b></b></p>` |
