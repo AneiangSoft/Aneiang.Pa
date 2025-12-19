@@ -44,6 +44,7 @@ namespace Aneiang.Pa.Bilibili.News
                 _options.Check();
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Referrer = new Uri(_options.BaseUrl);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(_options.UserAgent);
                 var newsResult = new NewsResult();
                 var response = await client.GetAsync($"{_options.BaseUrl}{_options.NewsUrl}");
                 if (response.IsSuccessStatusCode)

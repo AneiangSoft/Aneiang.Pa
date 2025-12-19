@@ -45,7 +45,6 @@ namespace Aneiang.Pa.HuPu.News
                 _options.Check();
                 var newsResult = new NewsResult();
                 var client = _httpClientFactory.CreateClient();
-                // 1. 获取虎扑热榜HTML内容
                 client.DefaultRequestHeaders.UserAgent.ParseAdd(_options.UserAgent);
                 client.DefaultRequestHeaders.Referrer = new Uri(_options.BaseUrl);
                 var html = await client.GetStringAsync($"{_options.BaseUrl}{_options.NewsUrl}");
@@ -54,9 +53,8 @@ namespace Aneiang.Pa.HuPu.News
 
 
 
-                // 3. 查找热榜项
+                // 查找热榜项
                 var items = htmlDocument.DocumentNode.SelectNodes("//li[contains(@class, 'bbs-sl-web-post-body')]");
-
                 if (items == null || items.Count == 0)
                 {
                     // 尝试备用选择器

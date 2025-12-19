@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
 namespace Aneiang.Pa.Core.News
 {
@@ -38,6 +36,11 @@ namespace Aneiang.Pa.Core.News
             if (string.IsNullOrWhiteSpace(NewsUrl) || string.IsNullOrWhiteSpace(BaseUrl))
             {
                 throw new Exception("The configuration parameters are incomplete or missing!");
+            }
+
+            if (string.IsNullOrWhiteSpace(UserAgent))
+            {
+                UserAgent = UserAgentGenerator.GetRandomUserAgent();
             }
         }
     }

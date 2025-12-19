@@ -45,6 +45,7 @@ namespace Aneiang.Pa.IFeng.News
                 _options.Check();
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Referrer = new Uri(_options.BaseUrl);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(_options.UserAgent);
                 var response = await client.GetStringAsync($"{_options.BaseUrl}{_options.NewsUrl}");
                 var newsResult = new NewsResult();
                 var jsonMatch = Regex.Match(response, @"var\s+allData\s*=\s*(\{[\s\S]*?\});", RegexOptions.Singleline);

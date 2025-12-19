@@ -45,6 +45,7 @@ namespace Aneiang.Pa.DouBan.News
                 _options.Check();
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Referrer = new Uri(_options.BaseUrl);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(_options.UserAgent);
                 client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
                 var newsResult = new NewsResult();

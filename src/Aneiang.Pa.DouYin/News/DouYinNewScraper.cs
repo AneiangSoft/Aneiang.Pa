@@ -1,13 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Aneiang.Pa.Core.Data;
+﻿using Aneiang.Pa.Core.Data;
 using Aneiang.Pa.Core.News.Models;
 using Aneiang.Pa.DouYin.Models;
 using Microsoft.Extensions.Options;
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Aneiang.Pa.DouYin.News
 {
@@ -18,6 +17,7 @@ namespace Aneiang.Pa.DouYin.News
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly DouYinScraperOptions _options;
+
         /// <summary>
         /// 抖音热门爬虫
         /// </summary>
@@ -43,52 +43,34 @@ namespace Aneiang.Pa.DouYin.News
         {
             try
             {
-                var newsResult = new NewsResult();
                 _options.Check();
+                var newsResult = new NewsResult();
                 var client = _httpClientFactory.CreateClient();
-
-
-                // 1. 先请求登录页面获取Cookie
                 var cookie = await GetDouYinCookieAsync();
-
-                if (string.IsNullOrEmpty(cookie))
+                if (string.IsNullOrEmpty(cookie)) return new NewsResult(false, "获取抖音Cookie失败！");
+                client.DefaultRequestHeaders.Referrer = new Uri(_options.BaseUrl);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(_options.UserAgent);
+                client.DefaultRequestHeaders.Add("Cookie", cookie);
+                var response = await client.GetAsync($"{_options.BaseUrl}{_options.NewsUrl}");
+                if (response.IsSuccessStatusCode)
                 {
-                    return new NewsResult(false, "获取抖音Cookie失败！");
-                }
-
-                // 2. 使用获取的Cookie请求热榜API
-                var url = $"{_options.BaseUrl}{_options.NewsUrl}";
-                var request = new HttpRequestMessage(HttpMethod.Get, url);
-                request.Headers.Add("Cookie", cookie);
-                var response = await client.SendAsync(request);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    return new NewsResult(false, $"API请求失败: {response.StatusCode}");
-                }
-                var json = await response.Content.ReadAsStringAsync();
-
-                // 3. 解析JSON数据
-                var douyinData = JsonSerializer.Deserialize<DouYinOriginalResult>(json);
-                if (douyinData == null)
-                {
-                    return new NewsResult();
-                }
-
-                // 4. 转换为NewsItem
-                newsResult.Data = douyinData.data.word_list
-                    .Select(k =>
-                    {
-                        var newsItem = new NewsItem
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    var douyinData = JsonSerializer.Deserialize<DouYinOriginalResult>(jsonString);
+                    if (douyinData == null) return new NewsResult();
+                    newsResult.Data = douyinData.data.word_list
+                        .Select(k =>
                         {
-                            Id = k.sentence_id,
-                            Title = k.word,
-                            Url = $"https://www.douyin.com/hot/{k.sentence_id}",
-                        };
-                        newsItem.SetOriginal(k);
-                        return newsItem;
-                    })
-                    .ToList();
+                            var newsItem = new NewsItem
+                            {
+                                Id = k.sentence_id,
+                                Title = k.word,
+                                Url = $"https://www.douyin.com/hot/{k.sentence_id}",
+                            };
+                            newsItem.SetOriginal(k);
+                            return newsItem;
+                        })
+                        .ToList();
+                }
                 return newsResult;
             }
             catch (Exception e)
