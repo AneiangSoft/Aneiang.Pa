@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Aneiang.Pa.Core.News.Models;
 
 namespace Aneiang.Pa.Core.News

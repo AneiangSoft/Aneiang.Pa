@@ -6,6 +6,7 @@ using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Aneiang.Pa.Core.News;
 
 namespace Aneiang.Pa.ZhiHu.News
 {
@@ -16,6 +17,7 @@ namespace Aneiang.Pa.ZhiHu.News
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ZhiHuScraperOptions _options;
+
         /// <summary>
         /// 知乎热门爬虫
         /// </summary>
@@ -36,7 +38,6 @@ namespace Aneiang.Pa.ZhiHu.News
         /// <summary>
         /// 获取热门消息
         /// </summary>
-
         public async Task<NewsResult> GetNewsAsync()
         {
             try

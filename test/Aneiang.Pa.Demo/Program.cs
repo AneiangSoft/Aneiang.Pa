@@ -23,6 +23,7 @@ var builder = Host.CreateDefaultBuilder(args)
 Console.WriteLine("输出测试项：");
 Console.WriteLine("1、使用新闻爬取器");
 Console.WriteLine("2、使用动态爬取器");
+Console.WriteLine("3、测试所有爬取器 - 信息统计");
 
 var tag = Console.ReadLine();
 switch (tag)
@@ -33,18 +34,20 @@ switch (tag)
     case "2":
         await DynamicScraper();
         break;
+    case "3":
+        await TestScraperAllNews();
+        break;
     default:
         Console.WriteLine("无效的选项");
         break;
 }
-
 // 使用新闻爬取器
 async Task ScraperNews()
 {
     using (var scope = builder.Services.CreateScope())
     {
         var newsScraperFactory = scope.ServiceProvider.GetRequiredService<INewsScraperFactory>();
-        var newsScraper = newsScraperFactory.GetScraper(ScraperSource.IFeng);
+        var newsScraper = newsScraperFactory.GetScraper(ScraperSource.BaiDu);
         var newsResult = await newsScraper.GetNewsAsync();
         foreach (var news in newsResult.Data)
         {
@@ -75,6 +78,25 @@ async Task DynamicScraper()
             Console.WriteLine();
         }
 
+    }
+}
+
+// 测试所有新闻爬取器
+async Task TestScraperAllNews()
+{
+    using (var scope = builder.Services.CreateScope())
+    {
+        // 并行获取所有新闻源
+        var newsScraperFactory = scope.ServiceProvider.GetRequiredService<INewsScraperFactory>();
+        var availableSources = Enum.GetValues<ScraperSource>();
+        var tasks = availableSources.Select(async source =>
+        {
+            var scraper = newsScraperFactory.GetScraper(source);
+            var data = await scraper.GetNewsAsync();
+            Console.WriteLine($"【{source}】: 是否成功：{data.IsSuccessd}；总条数{data.Data.Count}");
+        });
+
+        await Task.WhenAll(tasks);
     }
 }
 
