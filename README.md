@@ -9,7 +9,7 @@
 [![Target](https://img.shields.io/badge/target-netstandard2.1-blue?style=flat-square)](#)
 [![Status](https://img.shields.io/badge/status-active-success?style=flat-square)](#)
 
-一个基于 .NET 的多平台热门新闻/热榜爬虫库，当前支持微博、知乎、B 站、百度、抖音、虎扑、头条、腾讯、掘金、澎湃、凤凰网、豆瓣等平台爬虫，并附带 Demo 示例。项目开源，后续将增加更多平台。
+一个基于 .NET 开箱即用的爬虫库，使用复杂度极低，预设`多平台热榜`爬虫，当前支持微博、知乎、B 站、百度、抖音、虎扑、头条、腾讯、掘金、澎湃、凤凰网、豆瓣、Csdn、博客园等平台爬虫，除了预设热榜数据爬取，也支持`动态数据集`爬取。项目开源，后续将增加更多平台及数据、视频爬取。
 
 **⚠️ 抓取间隔建议控制在五分钟以上，避免频繁抓取导致 IP 被封禁**
 
