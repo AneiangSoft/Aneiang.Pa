@@ -1,0 +1,6 @@
+@Aneiang.Pa.ClientDemo_HostAddress = http://localhost:5115
+
+GET {{Aneiang.Pa.ClientDemo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -24,6 +24,7 @@
     <Project Path="src/Aneiang.Pa/Aneiang.Pa.csproj" />
   </Folder>
   <Folder Name="/test/">
+    <Project Path="test/Aneiang.Pa.ClientDemo/Aneiang.Pa.ClientDemo.csproj" Id="68dacdc0-4a81-41ef-b740-6b0c9fdd4ba7" />
     <Project Path="test/Aneiang.Pa.Demo/Aneiang.Pa.Demo.csproj" />
   </Folder>
 </Solution>
