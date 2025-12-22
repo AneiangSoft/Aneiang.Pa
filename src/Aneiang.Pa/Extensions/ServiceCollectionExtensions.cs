@@ -30,17 +30,25 @@ using Aneiang.Pa.ZhiHu.Models;
 using Aneiang.Pa.ZhiHu.News;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Net.Http;
+using Aneiang.Pa.Core.Data;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Aneiang.Pa.Extensions
 {
+    /// <summary>
+    /// The service collection extensions.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// 注册微博爬取器
+        /// 注册新闻爬取器
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        public static void AddNewsScraper(this IServiceCollection services, IConfiguration? configuration = null)
+        /// <param name="httpConfigureHandler"></param>
+        public static IServiceCollection AddNewsScraper(this IServiceCollection services, IConfiguration? configuration = null, Func<HttpMessageHandler>? httpConfigureHandler = null)
         {
             if (configuration != null)
             {
@@ -60,21 +68,25 @@ namespace Aneiang.Pa.Extensions
                 services.Configure<CnBlogScraperOptions>(configuration.GetSection("Scraper:CnBlog"));
             }
 
-            services.AddHttpClient();
-            services.AddSingleton<IWeiBoNewScraper, WeiBoNewScraper>();
-            services.AddSingleton<IZhiHuNewScraper, ZhiHuNewScraper>();
-            services.AddSingleton<IBilibiliNewScraper, BilibiliNewScraper>();
-            services.AddSingleton<IBaiDuNewScraper, BaiDuNewScraper>();
-            services.AddSingleton<IDouYinNewScraper, DouYinNewScraper>();
-            services.AddSingleton<ITouTiaoNewScraper, TouTiaoNewScraper>();
-            services.AddSingleton<IHuPuNewScraper, HuPuNewScraper>();
-            services.AddSingleton<ITencentNewScraper, TencentNewScraper>();
-            services.AddSingleton<IJueJinNewScraper, JueJinNewScraper>();
-            services.AddSingleton<IThePaperNewScraper, ThePaperNewScraper>();
-            services.AddSingleton<IDouBanNewScraper, DouBanNewScraper>();
-            services.AddSingleton<IIFengNewScraper, IFengNewScraper>();
-            services.AddSingleton<ICsdnNewScraper, CsdnNewScraper>();
-            services.AddSingleton<ICnBlogNewScraper, CnBlogNewScraper>();
+            var httpClientBuilder = services.AddHttpClient(PaConsts.DefaultHttpClientName);
+            if (httpConfigureHandler != null)
+            {
+                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(httpConfigureHandler);
+            }
+            services.TryAddSingleton<IWeiBoNewScraper, WeiBoNewScraper>();
+            services.TryAddSingleton<IZhiHuNewScraper, ZhiHuNewScraper>();
+            services.TryAddSingleton<IBilibiliNewScraper, BilibiliNewScraper>();
+            services.TryAddSingleton<IBaiDuNewScraper, BaiDuNewScraper>();
+            services.TryAddSingleton<IDouYinNewScraper, DouYinNewScraper>();
+            services.TryAddSingleton<ITouTiaoNewScraper, TouTiaoNewScraper>();
+            services.TryAddSingleton<IHuPuNewScraper, HuPuNewScraper>();
+            services.TryAddSingleton<ITencentNewScraper, TencentNewScraper>();
+            services.TryAddSingleton<IJueJinNewScraper, JueJinNewScraper>();
+            services.TryAddSingleton<IThePaperNewScraper, ThePaperNewScraper>();
+            services.TryAddSingleton<IDouBanNewScraper, DouBanNewScraper>();
+            services.TryAddSingleton<IIFengNewScraper, IFengNewScraper>();
+            services.TryAddSingleton<ICsdnNewScraper, CsdnNewScraper>();
+            services.TryAddSingleton<ICnBlogNewScraper, CnBlogNewScraper>();
 
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IWeiBoNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IZhiHuNewScraper>());
@@ -86,12 +98,14 @@ namespace Aneiang.Pa.Extensions
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<ITencentNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IJueJinNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IThePaperNewScraper>());
-            services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IDouBanNewScraper>()); 
+            services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IDouBanNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IIFengNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<ICsdnNewScraper>());
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<ICnBlogNewScraper>());
 
             services.AddSingleton<INewsScraperFactory, NewsScraperFactory>();
+
+            return services;
         }
     }
 }

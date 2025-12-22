@@ -14,8 +14,7 @@ var builder = Host.CreateDefaultBuilder(args)
     .ConfigureHostConfiguration(a => a.AddJsonFile("appsettings.json"))
     .ConfigureServices((context, services) =>
     {
-        services.AddNewsScraper(context.Configuration);
-        services.AddDynamicScraper(context.Configuration);
+        services.AddNewsScraper(context.Configuration).AddDynamicScraper();
     })
     .Build();
 

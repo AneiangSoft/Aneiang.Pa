@@ -1,11 +1,12 @@
-﻿using Aneiang.Pa.Dynamic.Attributes;
+﻿using Aneiang.Pa.Core.Data;
+using Aneiang.Pa.Dynamic.Attributes;
+using Aneiang.Pa.Dynamic.Extensions;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using Aneiang.Pa.Dynamic.Extensions;
 
 namespace Aneiang.Pa.Dynamic
 {
@@ -32,7 +33,7 @@ namespace Aneiang.Pa.Dynamic
         {
             try
             {
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient(PaConsts.DefaultHttpClientName);
                 client.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent ?? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36");
                 if (referer != null) client.DefaultRequestHeaders.Referrer = new Uri(referer);
                 var html = await client.GetStringAsync(url);

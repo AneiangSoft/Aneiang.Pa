@@ -45,7 +45,7 @@ namespace Aneiang.Pa.DouYin.News
             {
                 _options.Check();
                 var newsResult = new NewsResult();
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient(PaConsts.DefaultHttpClientName);
                 var cookie = await GetDouYinCookieAsync();
                 if (string.IsNullOrEmpty(cookie)) return new NewsResult(false, "获取抖音Cookie失败！");
                 client.DefaultRequestHeaders.Referrer = new Uri(_options.BaseUrl);
@@ -87,7 +87,7 @@ namespace Aneiang.Pa.DouYin.News
         {
             try
             {
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient(PaConsts.DefaultHttpClientName);
 
                 const string loginUrl = "https://login.douyin.com/";
                 var request = new HttpRequestMessage(HttpMethod.Get, loginUrl);

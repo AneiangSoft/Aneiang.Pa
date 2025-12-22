@@ -3,9 +3,13 @@ using Aneiang.Pa.CnBlog.News;
 using Aneiang.Pa.Dynamic.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Aneiang.Pa.CnBlog.Extensions
 {
+    /// <summary>
+    /// The service collection extensions.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
@@ -19,9 +23,8 @@ namespace Aneiang.Pa.CnBlog.Extensions
             {
                 services.Configure<CnBlogScraperOptions>(configuration.GetSection("Scraper:CnBlog"));
             }
-            services.AddHttpClient();
             services.AddDynamicScraper();
-            services.AddSingleton<ICnBlogNewScraper, CnBlogNewScraper>();
+            services.TryAddSingleton<ICnBlogNewScraper, CnBlogNewScraper>();
         }
     }
 }

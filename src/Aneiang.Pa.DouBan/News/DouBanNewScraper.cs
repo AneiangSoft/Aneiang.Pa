@@ -43,7 +43,7 @@ namespace Aneiang.Pa.DouBan.News
             try
             {
                 _options.Check();
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient(PaConsts.DefaultHttpClientName);
                 client.DefaultRequestHeaders.Referrer = new Uri(_options.BaseUrl);
                 client.DefaultRequestHeaders.UserAgent.ParseAdd(_options.UserAgent);
                 client.DefaultRequestHeaders.Accept.Add(

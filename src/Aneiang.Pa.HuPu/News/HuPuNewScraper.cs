@@ -1,4 +1,5 @@
-﻿using Aneiang.Pa.Core.News.Models;
+﻿using Aneiang.Pa.Core.Data;
+using Aneiang.Pa.Core.News.Models;
 using Aneiang.Pa.HuPu.Models;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Options;
@@ -44,7 +45,7 @@ namespace Aneiang.Pa.HuPu.News
             {
                 _options.Check();
                 var newsResult = new NewsResult();
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient(PaConsts.DefaultHttpClientName);
                 client.DefaultRequestHeaders.UserAgent.ParseAdd(_options.UserAgent);
                 client.DefaultRequestHeaders.Referrer = new Uri(_options.BaseUrl);
                 var html = await client.GetStringAsync($"{_options.BaseUrl}{_options.NewsUrl}");

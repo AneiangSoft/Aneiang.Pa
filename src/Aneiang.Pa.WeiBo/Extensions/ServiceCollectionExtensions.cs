@@ -1,14 +1,17 @@
-﻿using Aneiang.Pa.Core.News;
+﻿using Aneiang.Pa.Core.Data;
 using Aneiang.Pa.WeiBo.Models;
 using Aneiang.Pa.WeiBo.News;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Net.Http;
 
 namespace Aneiang.Pa.WeiBo.Extensions
 {
+    /// <summary>
+    /// The service collection extensions.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
@@ -16,14 +19,19 @@ namespace Aneiang.Pa.WeiBo.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        public static void AddWeiBoScraper(this IServiceCollection services, IConfiguration? configuration = null)
+        /// <param name="httpConfigureHandler"></param>
+        public static void AddWeiBoScraper(this IServiceCollection services, IConfiguration? configuration = null, Func<HttpMessageHandler>? httpConfigureHandler = null)
         {
             if (configuration != null)
             {
                 services.Configure<WeiBoScraperOptions>(configuration.GetSection("Scraper:WeiBo"));
             }
-            services.AddHttpClient();
-            services.AddSingleton<IWeiBoNewScraper, WeiBoNewScraper>();
+            var httpClientBuilder = services.AddHttpClient(PaConsts.DefaultHttpClientName);
+            if (httpConfigureHandler != null)
+            {
+                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(httpConfigureHandler);
+            }
+            services.TryAddSingleton<IWeiBoNewScraper, WeiBoNewScraper>();
         }
     }
 }
