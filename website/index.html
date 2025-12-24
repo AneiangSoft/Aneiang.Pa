@@ -123,18 +123,18 @@
 
     pre {
       border-radius: 14px;
-      border: 1px solid rgba(148, 163, 184, 0.14);
-      background: rgba(2, 6, 23, 0.92) !important;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.35);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(0, 0, 0, 0.88) !important;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.42);
       overflow: auto;
     }
 
     /* 代码块：更像编辑器（标题栏 + 复制按钮 + 行号） */
     .code-panel {
-      border: 1px solid rgba(148, 163, 184, 0.14);
+      border: 1px solid rgba(148, 163, 184, 0.18);
       border-radius: 16px;
       overflow: hidden;
-      background: rgba(2, 6, 23, 0.55);
+      background: rgba(0, 0, 0, 0.55);
     }
     .code-panel__head {
       display: flex;
@@ -463,10 +463,28 @@ app.Run();</code></pre>
       <div class="mt-6 grid gap-5">
         <div class="glass rounded-2xl p-5">
           <h3 class="text-sm font-semibold text-slate-100">使用聚合包（包含全部平台）</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-bash">dotnet add package Aneiang.Pa</code></pre>
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">Shell</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#install-code-1">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="install-code-1" class="language-bash">dotnet add package Aneiang.Pa</code></pre>
+          </div>
 
           <h3 class="mt-5 text-sm font-semibold text-slate-100">仅引用单个平台（示例：百度）</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-bash">dotnet add package Aneiang.Pa.BaiDu</code></pre>
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">Shell</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#install-code-2">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="install-code-2" class="language-bash">dotnet add package Aneiang.Pa.BaiDu</code></pre>
+          </div>
 
           <p class="mt-3 text-sm text-slate-400">所有包均已发布到 NuGet，支持 dotnet CLI、Visual Studio、Rider 等方式安装。</p>
         </div>
@@ -474,9 +492,18 @@ app.Run();</code></pre>
         <div class="glass rounded-2xl p-5">
           <h3 class="text-sm font-semibold text-slate-100">本地 Demo 体验</h3>
           <p class="mt-1 text-sm text-slate-300">仓库内自带 Demo 项目，默认演示百度热榜抓取。</p>
-          <pre class="mt-3 p-4 text-sm"><code class="language-bash">dotnet restore
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">Shell</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#install-code-3">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="install-code-3" class="language-bash">dotnet restore
 dotnet build test/Aneiang.Pa.Demo/Aneiang.Pa.Demo.csproj
 dotnet run --project test/Aneiang.Pa.Demo</code></pre>
+          </div>
         </div>
       </div>
     </section>
@@ -491,18 +518,35 @@ dotnet run --project test/Aneiang.Pa.Demo</code></pre>
       <div class="mt-6 grid gap-5">
         <div class="glass rounded-2xl p-5">
           <h3 class="text-sm font-semibold text-slate-100">注册爬虫服务</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-csharp">using Aneiang.Pa.Extensions;
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">C#</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#usage-code-1">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="usage-code-1" class="language-csharp">using Aneiang.Pa.Extensions;
 
 // 方式一：自动注册所有平台爬虫
 services.AddNewsScraper(configuration);
 
 // 方式二：仅注册单个平台（示例：百度）
 services.AddBaiDuScraper();</code></pre>
+          </div>
         </div>
 
         <div class="glass rounded-2xl p-5">
           <h3 class="text-sm font-semibold text-slate-100">获取并使用爬虫</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-csharp">using Aneiang.Pa.Models;
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">C#</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#usage-code-2">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="usage-code-2" class="language-csharp">using Aneiang.Pa.Models;
 using Aneiang.Pa.News;
 
 // 通过工厂模式获取爬虫
@@ -513,6 +557,7 @@ var result = await scraper.GetNewsAsync();
 // 或者直接注入单个平台爬虫
 var baiDuScraper = scope.ServiceProvider.GetRequiredService&lt;IBaiDuNewScraper&gt;();
 var result2 = await baiDuScraper.GetNewsAsync();</code></pre>
+          </div>
         </div>
       </div>
     </section>
@@ -527,7 +572,15 @@ var result2 = await baiDuScraper.GetNewsAsync();</code></pre>
       <div class="mt-6 grid gap-5">
         <div class="glass rounded-2xl p-5">
           <h3 class="text-sm font-semibold text-slate-100">配置文件方式（推荐）</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-json">// appsettings.json
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">appsettings.json</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#proxy-code-1">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="proxy-code-1" class="language-json">// appsettings.json
 {
   "Scraper": {
     "ProxyPool": {
@@ -540,17 +593,27 @@ var result2 = await baiDuScraper.GetNewsAsync();</code></pre>
     }
   }
 }</code></pre>
+          </div>
         </div>
 
         <div class="glass rounded-2xl p-5">
           <h3 class="text-sm font-semibold text-slate-100">在代码中注册</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-csharp">using Aneiang.Pa.Core.Proxy;
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">C#</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#proxy-code-2">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="proxy-code-2" class="language-csharp">using Aneiang.Pa.Core.Proxy;
 
 builder.Services.AddPaDefaultHttpClientWithProxy(
     proxyConfiguration: builder.Configuration.GetSection("Scraper:ProxyPool"));
 
 // 然后正常注册爬虫服务
 builder.Services.AddNewsScraper(builder.Configuration);</code></pre>
+          </div>
           <p class="mt-3 text-sm text-slate-400">
             支持 <code class="rounded bg-slate-800/70 px-1 py-0.5">RoundRobin</code> 与
             <code class="rounded bg-slate-800/70 px-1 py-0.5">Random</code> 两种策略，未启用时自动退化为普通 HttpClient。
@@ -572,10 +635,27 @@ builder.Services.AddNewsScraper(builder.Configuration);</code></pre>
       <div class="mt-6 grid gap-5">
         <div class="glass rounded-2xl p-5">
           <h3 class="text-sm font-semibold text-slate-100">安装扩展包</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-bash">dotnet add package Aneiang.Pa.AspNetCore</code></pre>
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">Shell</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#aspnet-code-1">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="aspnet-code-1" class="language-bash">dotnet add package Aneiang.Pa.AspNetCore</code></pre>
+          </div>
 
           <h3 class="mt-5 text-sm font-semibold text-slate-100">注册控制器</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-csharp">using Aneiang.Pa.Extensions;
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">C#</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#aspnet-code-2">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="aspnet-code-2" class="language-csharp">using Aneiang.Pa.Extensions;
 using Aneiang.Pa.AspNetCore.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -587,6 +667,7 @@ builder.Services.AddScraperController(options =&gt;
     options.RoutePrefix = "api/scraper";
     options.UseLowercaseInRoute = true;
 });</code></pre>
+          </div>
         </div>
 
         <div class="glass rounded-2xl p-5">
@@ -612,19 +693,45 @@ builder.Services.AddScraperController(options =&gt;
       <div class="mt-6 grid gap-5">
         <div class="glass rounded-2xl p-5">
           <h3 class="text-sm font-semibold text-slate-100">安装与注册</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-bash">dotnet add package Aneiang.Pa.Dynamic
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">Shell</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#dynamic-code-1">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="dynamic-code-1" class="language-bash">dotnet add package Aneiang.Pa.Dynamic
 
 services.AddDynamicScraper();</code></pre>
+          </div>
 
           <h3 class="mt-5 text-sm font-semibold text-slate-100">调用示例</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-csharp">var scraper = scope.ServiceProvider.GetRequiredService&lt;IDynamicScraper&gt;();
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">C#</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#dynamic-code-2">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="dynamic-code-2" class="language-csharp">var scraper = scope.ServiceProvider.GetRequiredService&lt;IDynamicScraper&gt;();
 var result = await scraper.DatasetScraper&lt;CnBlogOriginalResult&gt;(
     "https://www.cnblogs.com/pick");</code></pre>
+          </div>
         </div>
 
         <div class="glass rounded-2xl p-5">
           <h3 class="text-sm font-semibold text-slate-100">模型定义示例（博客园热门）</h3>
-          <pre class="mt-3 p-4 text-sm"><code class="language-csharp">[HtmlContainer("div", htmlClass: "post-list", htmlId: "post_list", index: 1)]
+          <div class="code-panel mt-3">
+            <div class="code-panel__head">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="truncate text-xs text-slate-300">C# Model</span>
+              </div>
+              <button class="code-copy" type="button" data-copy-target="#dynamic-code-3">复制</button>
+            </div>
+            <pre class="p-4 text-sm leading-relaxed"><code id="dynamic-code-3" class="language-csharp">[HtmlContainer("div", htmlClass: "post-list", htmlId: "post_list", index: 1)]
 [HtmlItem("article", htmlClass: "post-item")]
 public class CnBlogOriginalResult
 {
@@ -639,6 +746,7 @@ public class CnBlogOriginalResult
 
     // ...更多字段定义
 }</code></pre>
+          </div>
         </div>
       </div>
     </section>
