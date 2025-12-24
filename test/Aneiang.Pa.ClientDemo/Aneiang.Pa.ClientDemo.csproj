@@ -12,6 +12,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Aneiang.Pa\Aneiang.Pa.csproj" />
+    <ProjectReference Include="..\..\src\Aneiang.Pa.AspNetCore\Aneiang.Pa.AspNetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

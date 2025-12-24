@@ -6,6 +6,7 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/">
+    <Project Path="src/Aneiang.Pa.AspNetCore/Aneiang.Pa.AspNetCore.csproj" />
     <Project Path="src/Aneiang.Pa.BaiDu/Aneiang.Pa.BaiDu.csproj" />
     <Project Path="src/Aneiang.Pa.Bilibili/Aneiang.Pa.Bilibili.csproj" />
     <Project Path="src/Aneiang.Pa.CnBlog/Aneiang.Pa.CnBlog.csproj" Id="dfaef650-3e00-4e6e-b404-4e6d34600e8c" />
