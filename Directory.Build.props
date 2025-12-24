@@ -12,7 +12,7 @@
     <Authors>AneiangSoft</Authors>
     <Company>AneiangSoft</Company>
     <Product>Aneiang.Pa</Product>
-    <Version>1.1.3.1</Version>
+    <Version>1.1.4</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>一个基于 .NET 开箱即用的爬虫库，使用复杂度极低，预设多平台热榜爬虫，当前支持微博、知乎、B 站、百度、抖音、虎扑、头条、腾讯、掘金、澎湃、凤凰网、豆瓣、Csdn、博客园等平台爬虫，除了预设热榜数据爬取，也支持动态数据集爬取</Description>
     <PackageDescription>一个基于 .NET 开箱即用的爬虫库，使用复杂度极低，预设多平台热榜爬虫，当前支持微博、知乎、B 站、百度、抖音、虎扑、头条、腾讯、掘金、澎湃、凤凰网、豆瓣、Csdn、博客园等平台爬虫，除了预设热榜数据爬取，也支持动态数据集爬取</PackageDescription>

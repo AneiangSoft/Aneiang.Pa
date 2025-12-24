@@ -29,8 +29,9 @@ dotnet add package Aneiang.Pa.BaiDu
 | Package | Description |
 | --- | --- |
 | Aneiang.Pa | Aggregate package containing all platform implementations |
-| Aneiang.Pa.Core | Core interfaces and models |
+| Aneiang.Pa.Core | Core interfaces and models, proxy pool functionality |
 | Aneiang.Pa.Dynamic | Dynamic web scraper |
+| Aneiang.Pa.AspNetCore | ASP.NET Core Web API extension (provides RESTful API controllers) |
 | Aneiang.Pa.BaiDu | Baidu Hotlist scraper |
 | Aneiang.Pa.Bilibili | Bilibili Hot Search scraper |
 | Aneiang.Pa.WeiBo | Weibo Hot Search scraper |
@@ -78,6 +79,302 @@ var result = await scraper.GetNewsAsync();
 var scraper = scope.ServiceProvider.GetRequiredService<IBaiDuNewScraper>();
 var result = await scraper.GetNewsAsync();
 ```
+
+## 🌐 Proxy Pool Feature
+
+**Supports configuring multiple proxy servers with automatic round-robin or random selection, effectively avoiding IP blocking.**
+
+### Features
+
+- ✅ Support for multiple proxy server configurations
+- ✅ Two selection strategies: RoundRobin and Random
+- ✅ Support for authenticated proxies (`http://user:password@host:port`)
+- ✅ Configurable via configuration file or code
+- ✅ Automatically degrades to regular HttpClient when not enabled
+
+### Usage
+
+#### Method 1: Configuration File (Recommended)
+
+Configure in `appsettings.json`:
+```json
+{
+  "Scraper": {
+    "ProxyPool": {
+      "Enabled": true,
+      "Strategy": "RoundRobin",
+      "Proxies": [
+        "http://127.0.0.1:7890",
+        "http://user:password@proxy.example.com:8080",
+        "http://192.168.1.100:3128"
+      ]
+    }
+  }
+}
+```
+
+Register in code:
+```csharp
+using Aneiang.Pa.Core.Proxy;
+
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((context, services) =>
+    {
+        // Register default HttpClient with proxy pool support
+        services.AddPaDefaultHttpClientWithProxy(
+            proxyConfiguration: context.Configuration.GetSection("Scraper:ProxyPool"));
+        
+        // Register scraper services (will automatically use the configured HttpClient)
+        services.AddNewsScraper(context.Configuration);
+    })
+    .Build();
+```
+
+#### Method 2: Code Configuration
+
+```csharp
+using Aneiang.Pa.Core.Proxy;
+
+services.AddPaDefaultHttpClientWithProxy(
+    proxyConfigure: options =>
+    {
+        options.Enabled = true;
+        options.Strategy = ProxySelectionStrategy.RoundRobin; // or Random
+        options.Proxies = new List<string>
+        {
+            "http://127.0.0.1:7890",
+            "http://user:password@proxy.example.com:8080",
+            "http://192.168.1.100:3128"
+        };
+    });
+
+services.AddNewsScraper();
+```
+
+#### Register Proxy Pool Service Only (Without HttpClient)
+
+If you only need the proxy pool service, you can use:
+```csharp
+// Register proxy pool service only
+services.AddPaProxyPool(
+    configuration: context.Configuration.GetSection("Scraper:ProxyPool"));
+
+// Or configure via code
+services.AddPaProxyPool(
+    configure: options =>
+    {
+        options.Enabled = true;
+        options.Strategy = ProxySelectionStrategy.Random;
+        options.Proxies = new List<string> { "http://127.0.0.1:7890" };
+    });
+
+// Then inject IProxyPool to use
+var proxyPool = serviceProvider.GetRequiredService<IProxyPool>();
+var proxyUri = proxyPool.GetNextProxy();
+```
+
+### Proxy Selection Strategies
+
+- **RoundRobin**: Uses proxy servers sequentially in order, ensuring load balancing
+- **Random**: Randomly selects a proxy server each time
+
+### Proxy Address Format
+
+Supports the following proxy address formats:
+- `http://host:port` - HTTP proxy (no authentication)
+- `http://user:password@host:port` - HTTP proxy (with authentication)
+- `https://host:port` - HTTPS proxy
+
+### Notes
+
+1. **Enable Check**: If `Enabled = true` but no proxy list is configured, an exception will be thrown
+2. **HttpClient Name**: The default HttpClient name is `Aneiang.Pa.DefaultHttpClient`, scrapers will automatically use this HttpClient
+3. **Proxy Priority**: If `AddPaDefaultHttpClientWithProxy` is called before `AddNewsScraper`, scrapers will use the configured proxy pool
+4. **When Not Enabled**: When `Enabled = false` or the proxy list is empty, it automatically degrades to a regular HttpClient without affecting normal usage
+
+## 🚀 ASP.NET Core Web API Integration (Aneiang.Pa.AspNetCore)
+
+**Provides out-of-the-box Web API controllers with RESTful API support and optional authorization features.**
+
+### Install ASP.NET Core Extension Package
+```bash
+dotnet add package Aneiang.Pa.AspNetCore
+```
+
+### Quick Start
+
+#### 1. Register Services
+```csharp
+using Aneiang.Pa.Extensions;
+using Aneiang.Pa.AspNetCore.Extensions;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Register news scraper services
+builder.Services.AddNewsScraper(builder.Configuration);
+
+// Add scraper controller support
+builder.Services.AddScraperController(options =>
+{
+    options.RoutePrefix = "api/scraper"; // Route prefix, default "api/scraper"
+    options.UseLowercaseInRoute = true; // Use lowercase in routes
+    options.EnableResponseCaching = false; // Enable response caching
+    options.CacheDurationSeconds = 300; // Cache duration (seconds)
+});
+
+var app = builder.Build();
+app.MapControllers();
+app.Run();
+```
+
+#### 2. API Endpoints
+
+The controller provides the following RESTful API endpoints:
+
+| Endpoint | Method | Description | Example |
+| --- | --- | --- | --- |
+| `/api/scraper/{source}` | GET | Get news from specified platform | `/api/scraper/BaiDu` |
+| `/api/scraper/available-sources` | GET | Get list of all supported scraper sources | `/api/scraper/available-sources` |
+| `/api/scraper/health` | GET | Check health status of all scrapers | `/api/scraper/health?timeoutMs=5000` |
+| `/api/scraper/{source}/health` | GET | Check health status of specified scraper | `/api/scraper/BaiDu/health?timeoutMs=5000` |
+
+**Supported Scraper Sources**: `BaiDu`, `Bilibili`, `WeiBo`, `ZhiHu`, `DouYin`, `HuPu`, `TouTiao`, `Tencent`, `JueJin`, `ThePaper`, `DouBan`, `IFeng`, `Csdn`, `CnBlog` (case-insensitive)
+
+#### 3. Authorization Configuration (Optional)
+
+By default, authorization is **disabled** (`Enabled = false`), and all API endpoints are publicly accessible. You can configure authorization to protect your APIs.
+
+**Method 1: Configuration File (Recommended)**
+
+Configure in `appsettings.json`:
+```json
+{
+  "Scraper": {
+    "Authorization": {
+      "Enabled": true,
+      "Scheme": "ApiKey",
+      "ApiKeys": [
+        "your-api-key-1",
+        "your-api-key-2"
+      ],
+      "ApiKeyHeaderName": "X-API-Key",
+      "ApiKeyQueryParameterName": "apiKey",
+      "ExcludedRoutes": [
+        "/api/scraper/health",
+        "/api/scraper/available-sources"
+      ],
+      "UnauthorizedMessage": "Unauthorized access"
+    }
+  }
+}
+```
+
+Then enable in code:
+```csharp
+builder.Services.ConfigureAuthorization(builder.Configuration);
+```
+
+**Method 2: Code Configuration**
+
+```csharp
+builder.Services.ConfigureAuthorization(options =>
+{
+    // Enable authorization
+    options.Enabled = true;
+    
+    // Set authorization scheme: ApiKey, Custom, or Combined
+    options.Scheme = AuthorizationScheme.ApiKey;
+    
+    // Configure API Key list
+    options.ApiKeys = new List<string>
+    {
+        "your-api-key-1",
+        "your-api-key-2"
+    };
+    
+    // Set API Key header name (default: X-API-Key)
+    options.ApiKeyHeaderName = "X-API-Key";
+    
+    // Set API Key query parameter name (optional)
+    options.ApiKeyQueryParameterName = "apiKey";
+    
+    // Exclude routes that don't require authorization (supports wildcards)
+    options.ExcludedRoutes = new List<string>
+    {
+        "/api/scraper/health",
+        "/api/scraper/*/health"  // Wildcard matching
+    };
+    
+    // Custom unauthorized error message
+    options.UnauthorizedMessage = "Unauthorized access";
+});
+```
+
+**Authorization Scheme Description**:
+
+- **ApiKey**: Validates API Key passed via `X-API-Key` header or `apiKey` query parameter
+- **Custom**: Uses custom authorization validation function
+- **Combined**: API Key or custom validation function, either one satisfies
+
+**Custom Authorization Example**:
+```csharp
+builder.Services.ConfigureAuthorization(options =>
+{
+    options.Enabled = true;
+    options.Scheme = AuthorizationScheme.Custom;
+    
+    // Custom authorization validation function
+    options.CustomAuthorizationFunc = (httpContext) =>
+    {
+        var authHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
+        if (authHeader?.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+            // Validate token (e.g., validate JWT, query database, etc.)
+            if (token == "valid-token")
+            {
+                // Can return ClaimsPrincipal
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.Name, "user"),
+                    new Claim(ClaimTypes.Role, "admin")
+                };
+                var identity = new ClaimsIdentity(claims, "custom");
+                var principal = new ClaimsPrincipal(identity);
+                return (true, principal);
+            }
+        }
+        return (false, null);
+    };
+});
+```
+
+**Calling API with API Key**:
+
+Via request header:
+```bash
+curl -H "X-API-Key: your-api-key-1" https://your-api.com/api/scraper/BaiDu
+```
+
+Via query parameter:
+```bash
+curl https://your-api.com/api/scraper/BaiDu?apiKey=your-api-key-1
+```
+
+#### 4. Health Check Feature
+
+The health check feature requires registration of the `IScraperHealthCheckService` service. If you use the `AddNewsScraper()` method, this service will be automatically registered.
+
+Health check endpoints:
+- `GET /api/scraper/health?timeoutMs=5000` - Check health status of all scrapers
+- `GET /api/scraper/{source}/health?timeoutMs=5000` - Check health status of specified scraper
+
+Parameter description:
+- `timeoutMs`: Timeout duration (milliseconds), range 1-60000, default 5000
+
+#### 5. Sample Project
+
+See the complete sample code in the `test/Aneiang.Pa.ClientDemo` directory.
 
 ## ✨ Advanced Usage - Dynamic Scraping (Aneiang.Pa.Dynamic)
 

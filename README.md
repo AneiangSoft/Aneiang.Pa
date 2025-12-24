@@ -29,8 +29,9 @@ dotnet add package Aneiang.Pa.BaiDu
 | Package | 说明 |
 | --- | --- |
 | Aneiang.Pa | 聚合包，包含全部平台实现 |
-| Aneiang.Pa.Core | 核心接口与模型 |
+| Aneiang.Pa.Core | 核心接口与模型、代理池功能 |
 | Aneiang.Pa.Dynamic | 动态爬虫 |
+| Aneiang.Pa.AspNetCore | ASP.NET Core Web API 扩展（提供 RESTful API 控制器） |
 | Aneiang.Pa.BaiDu | 百度热榜爬虫 |
 | Aneiang.Pa.Bilibili | B 站热搜爬虫 |
 | Aneiang.Pa.WeiBo | 微博热搜爬虫 |
@@ -78,6 +79,302 @@ var result = await scraper.GetNewsAsync();
 var scraper = scope.ServiceProvider.GetRequiredService<IBaiDuNewScraper>();
 var result = await scraper.GetNewsAsync();
 ```
+
+## 🌐 代理池功能（Proxy Pool）
+
+**支持配置多个代理服务器，自动轮询或随机选择代理进行请求，有效避免 IP 被封禁。**
+
+### 功能特性
+
+- ✅ 支持多个代理服务器配置
+- ✅ 支持两种选择策略：轮询（RoundRobin）和随机（Random）
+- ✅ 支持带认证的代理（`http://user:password@host:port`）
+- ✅ 可通过配置文件或代码配置
+- ✅ 未启用时自动退化为普通 HttpClient
+
+### 使用方式
+
+#### 方式1：通过配置文件（推荐）
+
+在 `appsettings.json` 中配置：
+```json
+{
+  "Scraper": {
+    "ProxyPool": {
+      "Enabled": true,
+      "Strategy": "RoundRobin",
+      "Proxies": [
+        "http://127.0.0.1:7890",
+        "http://user:password@proxy.example.com:8080",
+        "http://192.168.1.100:3128"
+      ]
+    }
+  }
+}
+```
+
+在代码中注册：
+```csharp
+using Aneiang.Pa.Core.Proxy;
+
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((context, services) =>
+    {
+        // 注册带代理池支持的默认 HttpClient
+        services.AddPaDefaultHttpClientWithProxy(
+            proxyConfiguration: context.Configuration.GetSection("Scraper:ProxyPool"));
+        
+        // 注册爬虫服务（会自动使用配置的 HttpClient）
+        services.AddNewsScraper(context.Configuration);
+    })
+    .Build();
+```
+
+#### 方式2：通过代码配置
+
+```csharp
+using Aneiang.Pa.Core.Proxy;
+
+services.AddPaDefaultHttpClientWithProxy(
+    proxyConfigure: options =>
+    {
+        options.Enabled = true;
+        options.Strategy = ProxySelectionStrategy.RoundRobin; // 或 Random
+        options.Proxies = new List<string>
+        {
+            "http://127.0.0.1:7890",
+            "http://user:password@proxy.example.com:8080",
+            "http://192.168.1.100:3128"
+        };
+    });
+
+services.AddNewsScraper();
+```
+
+#### 仅注册代理池服务（不注册 HttpClient）
+
+如果只需要代理池服务，可以使用：
+```csharp
+// 仅注册代理池服务
+services.AddPaProxyPool(
+    configuration: context.Configuration.GetSection("Scraper:ProxyPool"));
+
+// 或通过代码配置
+services.AddPaProxyPool(
+    configure: options =>
+    {
+        options.Enabled = true;
+        options.Strategy = ProxySelectionStrategy.Random;
+        options.Proxies = new List<string> { "http://127.0.0.1:7890" };
+    });
+
+// 然后注入 IProxyPool 使用
+var proxyPool = serviceProvider.GetRequiredService<IProxyPool>();
+var proxyUri = proxyPool.GetNextProxy();
+```
+
+### 代理选择策略
+
+- **RoundRobin（轮询）**：按顺序依次使用代理服务器，确保负载均衡
+- **Random（随机）**：每次随机选择一个代理服务器
+
+### 代理地址格式
+
+支持以下格式的代理地址：
+- `http://host:port` - HTTP 代理（无认证）
+- `http://user:password@host:port` - HTTP 代理（带认证）
+- `https://host:port` - HTTPS 代理
+
+### 注意事项
+
+1. **启用检查**：如果 `Enabled = true` 但未配置代理列表，会抛出异常
+2. **HttpClient 名称**：默认 HttpClient 名称为 `Aneiang.Pa.DefaultHttpClient`，爬虫会自动使用该 HttpClient
+3. **代理优先级**：如果在 `AddNewsScraper` 之前调用 `AddPaDefaultHttpClientWithProxy`，爬虫会使用配置的代理池
+4. **未启用时**：当 `Enabled = false` 或代理列表为空时，会自动退化为普通 HttpClient，不影响正常使用
+
+## 🚀 ASP.NET Core Web API 集成（Aneiang.Pa.AspNetCore）
+
+**提供开箱即用的 Web API 控制器，支持 RESTful API 调用和可选的授权功能。**
+
+### 安装 ASP.NET Core 扩展包
+```bash
+dotnet add package Aneiang.Pa.AspNetCore
+```
+
+### 快速开始
+
+#### 1. 注册服务
+```csharp
+using Aneiang.Pa.Extensions;
+using Aneiang.Pa.AspNetCore.Extensions;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// 注册新闻爬虫服务
+builder.Services.AddNewsScraper(builder.Configuration);
+
+// 添加爬虫控制器支持
+builder.Services.AddScraperController(options =>
+{
+    options.RoutePrefix = "api/scraper"; // 路由前缀，默认 "api/scraper"
+    options.UseLowercaseInRoute = true; // 路由使用小写
+    options.EnableResponseCaching = false; // 是否启用响应缓存
+    options.CacheDurationSeconds = 300; // 缓存时长（秒）
+});
+
+var app = builder.Build();
+app.MapControllers();
+app.Run();
+```
+
+#### 2. API 端点
+
+控制器提供以下 RESTful API 端点：
+
+| 端点 | 方法 | 说明 | 示例 |
+| --- | --- | --- | --- |
+| `/api/scraper/{source}` | GET | 获取指定平台的新闻 | `/api/scraper/BaiDu` |
+| `/api/scraper/available-sources` | GET | 获取所有支持的爬虫源列表 | `/api/scraper/available-sources` |
+| `/api/scraper/health` | GET | 检查所有爬虫的健康状态 | `/api/scraper/health?timeoutMs=5000` |
+| `/api/scraper/{source}/health` | GET | 检查指定爬虫的健康状态 | `/api/scraper/BaiDu/health?timeoutMs=5000` |
+
+**支持的爬虫源**：`BaiDu`、`Bilibili`、`WeiBo`、`ZhiHu`、`DouYin`、`HuPu`、`TouTiao`、`Tencent`、`JueJin`、`ThePaper`、`DouBan`、`IFeng`、`Csdn`、`CnBlog`（支持大小写不敏感）
+
+#### 3. 授权配置（可选）
+
+默认情况下，授权功能是**未启用**的（`Enabled = false`），所有 API 端点都可以公开访问。如果需要保护 API，可以配置授权。
+
+**方式1：通过配置文件（推荐）**
+
+在 `appsettings.json` 中配置：
+```json
+{
+  "Scraper": {
+    "Authorization": {
+      "Enabled": true,
+      "Scheme": "ApiKey",
+      "ApiKeys": [
+        "your-api-key-1",
+        "your-api-key-2"
+      ],
+      "ApiKeyHeaderName": "X-API-Key",
+      "ApiKeyQueryParameterName": "apiKey",
+      "ExcludedRoutes": [
+        "/api/scraper/health",
+        "/api/scraper/available-sources"
+      ],
+      "UnauthorizedMessage": "未授权访问"
+    }
+  }
+}
+```
+
+然后在代码中启用：
+```csharp
+builder.Services.ConfigureAuthorization(builder.Configuration);
+```
+
+**方式2：通过代码配置**
+
+```csharp
+builder.Services.ConfigureAuthorization(options =>
+{
+    // 启用授权
+    options.Enabled = true;
+    
+    // 设置授权方式：ApiKey、Custom 或 Combined
+    options.Scheme = AuthorizationScheme.ApiKey;
+    
+    // 配置 API Key 列表
+    options.ApiKeys = new List<string>
+    {
+        "your-api-key-1",
+        "your-api-key-2"
+    };
+    
+    // 设置 API Key 请求头名称（默认：X-API-Key）
+    options.ApiKeyHeaderName = "X-API-Key";
+    
+    // 设置 API Key 查询参数名称（可选）
+    options.ApiKeyQueryParameterName = "apiKey";
+    
+    // 排除不需要授权的路由（支持通配符）
+    options.ExcludedRoutes = new List<string>
+    {
+        "/api/scraper/health",
+        "/api/scraper/*/health"  // 通配符匹配
+    };
+    
+    // 自定义未授权错误消息
+    options.UnauthorizedMessage = "未授权访问";
+});
+```
+
+**授权方式说明**：
+
+- **ApiKey**：通过请求头 `X-API-Key` 或查询参数 `apiKey` 传递 API Key 进行验证
+- **Custom**：使用自定义授权验证函数
+- **Combined**：API Key 或自定义验证函数，满足任一即可
+
+**自定义授权示例**：
+```csharp
+builder.Services.ConfigureAuthorization(options =>
+{
+    options.Enabled = true;
+    options.Scheme = AuthorizationScheme.Custom;
+    
+    // 自定义授权验证函数
+    options.CustomAuthorizationFunc = (httpContext) =>
+    {
+        var authHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
+        if (authHeader?.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+            // 验证 token（例如：验证 JWT、查询数据库等）
+            if (token == "valid-token")
+            {
+                // 可以返回 ClaimsPrincipal
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.Name, "user"),
+                    new Claim(ClaimTypes.Role, "admin")
+                };
+                var identity = new ClaimsIdentity(claims, "custom");
+                var principal = new ClaimsPrincipal(identity);
+                return (true, principal);
+            }
+        }
+        return (false, null);
+    };
+});
+```
+
+**使用 API Key 调用 API**：
+
+通过请求头：
+```bash
+curl -H "X-API-Key: your-api-key-1" https://your-api.com/api/scraper/BaiDu
+```
+
+通过查询参数：
+```bash
+curl https://your-api.com/api/scraper/BaiDu?apiKey=your-api-key-1
+```
+
+#### 4. 健康检查功能
+
+健康检查功能需要注册 `IScraperHealthCheckService` 服务。如果使用 `AddNewsScraper()` 方法，该服务会自动注册。
+
+健康检查端点：
+- `GET /api/scraper/health?timeoutMs=5000` - 检查所有爬虫的健康状态
+- `GET /api/scraper/{source}/health?timeoutMs=5000` - 检查指定爬虫的健康状态
+
+参数说明：
+- `timeoutMs`：超时时间（毫秒），范围 1-60000，默认 5000
+
+#### 5. 示例项目
+
+查看 `test/Aneiang.Pa.ClientDemo` 目录下的完整示例代码。
 
 ## ✨ 高阶用法 - 动态爬取（Aneiang.Pa.Dynamic）
 
