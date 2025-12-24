@@ -107,9 +107,9 @@ namespace Aneiang.Pa.AspNetCore.Controllers
         /// </summary>
         /// <returns>支持的爬虫源列表</returns>
         /// <response code="200">成功获取爬虫源列表</response>
-        [HttpGet]
+        [HttpGet("available-sources")]
         [ProducesResponseType(typeof(object), 200)]
-        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)] // 缓存1小时，因为源列表很少变化
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public ActionResult GetAvailableSources()
         {
             return Ok(new 
