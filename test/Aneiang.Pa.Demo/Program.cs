@@ -3,6 +3,7 @@
 using Aneiang.Pa.Core.Proxy;
 using Aneiang.Pa.Dynamic;
 using Aneiang.Pa.Dynamic.Attributes;
+using Aneiang.Pa.Extensions;
 using Aneiang.Pa.Lottery.Data;
 using Aneiang.Pa.Lottery.Extensions;
 using Aneiang.Pa.Lottery.Services;
@@ -17,14 +18,16 @@ var builder = Host.CreateDefaultBuilder(args)
     .ConfigureHostConfiguration(a => a.AddJsonFile("appsettings.json"))
     .ConfigureServices((context, services) =>
     {
-        // 1. 注册带代理池支持的默认 HttpClient（使用配置中的 Scraper:ProxyPool）
-        services.AddPaDefaultHttpClientWithProxy(
-            proxyConfiguration: context.Configuration.GetSection("Scraper:ProxyPool"));
+        //// 1. 注册带代理池支持的默认 HttpClient（使用配置中的 Scraper:ProxyPool）
+        //services.AddPaDefaultHttpClientWithProxy(
+        //    proxyConfiguration: context.Configuration.GetSection("Scraper:ProxyPool"));
 
-        // 2. 注册新闻爬取器（包含百度等多平台）
-        services.AddNewsScraper(context.Configuration); //.AddDynamicScraper();
+        services.AddPaScraper();
 
-        services.AddLotteryScraper();
+        //// 2. 注册新闻爬取器（包含百度等多平台）
+        //services.AddNewsScraper(context.Configuration); //.AddDynamicScraper();
+
+        //services.AddLotteryScraper();
     })
     .Build();
 
