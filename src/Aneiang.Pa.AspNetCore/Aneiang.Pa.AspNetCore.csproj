@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aneiang.Pa\Aneiang.Pa.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.Core\Aneiang.Pa.Core.csproj" />
+    <ProjectReference Include="..\Aneiang.Pa\Aneiang.Pa.csproj" />
   </ItemGroup>
 
 </Project>
