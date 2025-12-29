@@ -45,10 +45,10 @@ if (-not $packages) {
     exit 1
 }
 
-# foreach ($pkg in $packages) {
-#     Write-Host "Pushing $($pkg.Name)..."
-#     dotnet nuget push $pkg.FullName --skip-duplicate --source $Source --api-key $ApiKey
-#     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-# }
+foreach ($pkg in $packages) {
+    Write-Host "Pushing $($pkg.Name)..."
+    dotnet nuget push $pkg.FullName --skip-duplicate --source $Source --api-key $ApiKey
+    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+}
 
 Write-Host "[OK] Pack and push done. Output: $output"
