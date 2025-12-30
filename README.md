@@ -22,6 +22,9 @@
 
 **⚠️ 爬取的数据仅限用于个人学习、研究或公益目的。不得用于商业售卖、攻击他人或任何非法活动，否则需自行承担法律责任。**
 
+- Github地址：[https://github.com/AneiangSoft/Aneiang.Pa](https://github.com/AneiangSoft/Aneiang.Pa)
+- Gitee地址（同步更新）：[https://gitee.com/aneiangsoft/Aneiang.Pa](https://gitee.com/aneiangsoft/Aneiang.Pa)
+
 ## 架构调整
 为了更好地组织和扩展功能，项目架构已进行调整：
 - `src/News`: 存放所有新闻热榜相关的爬虫项目。
