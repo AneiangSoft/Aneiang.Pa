@@ -1,8 +1,6 @@
 using Aneiang.Pa.AspNetCore.Constants;
 using Aneiang.Pa.AspNetCore.Options;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.Extensions.Options;
 
 namespace Aneiang.Pa.AspNetCore.Conventions
 {

@@ -31,6 +31,20 @@ namespace Aneiang.Pa.AspNetCore.Extensions
             // 使用 PostConfigure 来确保选项已经配置完成
             services.AddTransient<IPostConfigureOptions<MvcOptions>, ScraperControllerMvcOptionsPostConfigure>();
 
+            // 添加响应缓存服务
+            services.AddResponseCaching();
+
+            // 添加响应缓存约定
+            // 使用 PostConfigure 来确保 ScraperControllerOptions 已经配置完成
+            services.AddTransient<IPostConfigureOptions<MvcOptions>>(sp =>
+            {
+                var scraperOptions = sp.GetRequiredService<IOptions<ScraperControllerOptions>>();
+                return new PostConfigureOptions<MvcOptions>(null, options =>
+                {
+                    options.Conventions.Add(new ResponseCacheConvention(scraperOptions));
+                });
+            });
+
             return services;
         }
 
