@@ -64,7 +64,7 @@ namespace Aneiang.Pa.AspNetCore.Controllers
         [ProducesResponseType(typeof(AneiangGenericListResult<NewsItem>), 400)]
         [ProducesResponseType(typeof(AneiangGenericListResult<NewsItem>), 404)]
         [ProducesResponseType(typeof(AneiangGenericListResult<NewsItem>), 500)]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
         public async Task<ActionResult<AneiangGenericListResult<NewsItem>>> GetNews([FromRoute] string source)
         {
             if (string.IsNullOrWhiteSpace(source))
@@ -114,7 +114,7 @@ namespace Aneiang.Pa.AspNetCore.Controllers
         /// <response code="200">成功获取爬虫源列表</response>
         [HttpGet("news/sources")]
         [ProducesResponseType(typeof(object), 200)]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
         public ActionResult GetNewsSources()
         {
             return Ok(new
@@ -140,7 +140,7 @@ namespace Aneiang.Pa.AspNetCore.Controllers
         [ProducesResponseType(typeof(AneiangGenericResult<WelfareLotteryData>), 400)]
         [ProducesResponseType(typeof(AneiangGenericResult<WelfareLotteryData>), 404)]
         [ProducesResponseType(typeof(AneiangGenericResult<WelfareLotteryData>), 500)]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
         public async Task<ActionResult<AneiangGenericResult<WelfareLotteryData>>> GetWelfareLottery([FromRoute] string type, int? pageNo, int? pageSize)
         {
             if (string.IsNullOrWhiteSpace(type))
@@ -195,7 +195,7 @@ namespace Aneiang.Pa.AspNetCore.Controllers
         [ProducesResponseType(typeof(AneiangGenericResult<SportLotteryResult>), 400)]
         [ProducesResponseType(typeof(AneiangGenericResult<SportLotteryResult>), 404)]
         [ProducesResponseType(typeof(AneiangGenericResult<SportLotteryResult>), 500)]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
         public async Task<ActionResult<AneiangGenericResult<SportLotteryResult>>> GetSportLottery([FromRoute] string type, int? pageNo, int? pageSize)
         {
             if (string.IsNullOrWhiteSpace(type))
@@ -241,7 +241,7 @@ namespace Aneiang.Pa.AspNetCore.Controllers
         /// <response code="200">成功获取支持的彩票类型列表</response>
         [HttpGet("lottery/types")]
         [ProducesResponseType(typeof(object), 200)]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
         public ActionResult GetLotteryTypes()
         {
             return Ok(new
@@ -261,7 +261,7 @@ namespace Aneiang.Pa.AspNetCore.Controllers
         [HttpGet("health")]
         [ProducesResponseType(typeof(HealthCheckResult), 200)]
         [ProducesResponseType(typeof(object), 503)]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
         public async Task<ActionResult<HealthCheckResult>> CheckHealth([FromQuery] int? timeoutMs = null)
         {
             if (_healthCheckService == null)
@@ -318,7 +318,7 @@ namespace Aneiang.Pa.AspNetCore.Controllers
         [ProducesResponseType(typeof(object), 400)]
         [ProducesResponseType(typeof(object), 404)]
         [ProducesResponseType(typeof(object), 503)]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
         public async Task<ActionResult<ScraperHealthStatus>> CheckScraperHealth(
             [FromRoute] string source,
             [FromQuery] int? timeoutMs = null)

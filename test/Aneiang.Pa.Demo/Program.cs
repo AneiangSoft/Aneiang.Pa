@@ -1,13 +1,8 @@
-// Program.cs
-
-using Aneiang.Pa.Core.Proxy;
+using Aneiang.Pa.Demo;
 using Aneiang.Pa.Dynamic;
-using Aneiang.Pa.Dynamic.Attributes;
 using Aneiang.Pa.Extensions;
 using Aneiang.Pa.Lottery.Data;
-using Aneiang.Pa.Lottery.Extensions;
 using Aneiang.Pa.Lottery.Services;
-using Aneiang.Pa.News.Extensions;
 using Aneiang.Pa.News.Models;
 using Aneiang.Pa.News.News;
 using Microsoft.Extensions.Configuration;
@@ -32,10 +27,11 @@ var builder = Host.CreateDefaultBuilder(args)
     .Build();
 
 Console.WriteLine("输出测试项：");
-Console.WriteLine("1、使用新闻爬取器");
-Console.WriteLine("2、使用动态爬取器");
-Console.WriteLine("3、测试所有爬取器 - 信息统计");
-Console.WriteLine("4、测试彩票爬取器");
+Console.WriteLine("1、测试新闻爬取器");
+Console.WriteLine("2、测试所有爬取器 - 信息统计");
+Console.WriteLine("3、使用动态爬取器 - 数据集List");
+Console.WriteLine("4、使用动态爬取器 - 单数据模型");
+Console.WriteLine("5、测试彩票爬取器");
 
 var tag = Console.ReadLine();
 switch (tag)
@@ -44,12 +40,15 @@ switch (tag)
         await ScraperNews();
         break;
     case "2":
-        await DynamicScraper();
-        break;
-    case "3":
         await TestScraperAllNews();
         break;
+    case "3":
+        await DynamicDatasetScraper();
+        break;
     case "4":
+        await DynamicDataScraper();
+        break;
+    case "5":
         await TestLotteryScraper();
         break;
     default:
@@ -78,24 +77,6 @@ async Task ScraperNews()
     }
 }
 
-// 使用动态爬取器
-async Task DynamicScraper()
-{
-    using (var scope = builder.Services.CreateScope())
-    {
-        var scraperFactory = scope.ServiceProvider.GetRequiredService<IDynamicScraper>();
-        var testDataSets = await scraperFactory.DatasetScraperAsync<TestDataSet>("https://www.de62.com/listinfo-16-0.html");
-        foreach (var testDataSet in testDataSets)
-        {
-            Console.WriteLine($"Title: {testDataSet.Title}");
-            Console.WriteLine($"Url: {testDataSet.Url}");
-            Console.WriteLine($"Icon: {testDataSet.Icon}");
-            Console.WriteLine($"Desc: {testDataSet.Desc}");
-        }
-
-    }
-}
-
 // 测试所有新闻爬取器
 async Task TestScraperAllNews()
 {
@@ -112,6 +93,36 @@ async Task TestScraperAllNews()
         });
 
         await Task.WhenAll(tasks);
+    }
+}
+
+// 使用动态爬取器
+async Task DynamicDatasetScraper()
+{
+    using (var scope = builder.Services.CreateScope())
+    {
+        var scraperFactory = scope.ServiceProvider.GetRequiredService<IDynamicScraper>();
+        var testDataSets = await scraperFactory.DatasetScraperAsync<TestDataSet>();
+        foreach (var testDataSet in testDataSets)
+        {
+            Console.WriteLine($"Title: {testDataSet.Title}");
+            Console.WriteLine($"Url: {testDataSet.Url}");
+            Console.WriteLine($"Icon: {testDataSet.Icon}");
+            Console.WriteLine($"Desc: {testDataSet.Desc}");
+        }
+
+    }
+}
+
+// 使用动态爬取器
+async Task DynamicDataScraper()
+{
+    using (var scope = builder.Services.CreateScope())
+    {
+        var scraperFactory = scope.ServiceProvider.GetRequiredService<IDynamicScraper>();
+        var testDataSet = await scraperFactory.DataScraperAsync<TestData>();
+        Console.WriteLine($"Title: {testDataSet.Title}");
+        Console.WriteLine($"Desc: {testDataSet.Desc}");
     }
 }
 
@@ -151,22 +162,4 @@ async Task TestLotteryScraper()
             Console.WriteLine($"获取福利彩票-双色球数据失败！");
         }
     }
-}
-
-
-[HtmlContainer("div", htmlClass: "blogs-list", index: 1)]
-[HtmlItem("li")]
-public class TestDataSet
-{
-    [HtmlValue("h2/a")]
-    public string Title { get; set; }
-
-    [HtmlValue("h2/a", attribute: "href")]
-    public string Url { get; set; }
-
-    [HtmlValue("i/a/img", attribute: "src")]
-    public string Icon { get; set; }
-
-    [HtmlValue("p")]
-    public string Desc { get; set; }
 }

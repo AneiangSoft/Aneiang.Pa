@@ -1,4 +1,4 @@
-﻿using Aneiang.Pa.Core.Data;
+using Aneiang.Pa.Core.Data;
 using Aneiang.Pa.Dynamic.Attributes;
 using Aneiang.Pa.Dynamic.Extensions;
 using HtmlAgilityPack;
@@ -7,13 +7,14 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using Aneiang.Pa.Core.News;
 
 namespace Aneiang.Pa.Dynamic
 {
     /// <summary>
     /// 动态爬虫
     /// </summary>
-    public class DynamicScraper: IDynamicScraper
+    public class DynamicScraper : IDynamicScraper
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
@@ -27,20 +28,116 @@ namespace Aneiang.Pa.Dynamic
         }
 
         /// <summary>
+        /// 通用数据抓取，需要配合HtmlHeaderAttribute使用
+        /// </summary>
+        public async Task<T> DataScraperAsync<T>()
+            where T : new()
+        {
+            try
+            {
+                var type = typeof(T);
+                var htmlHeaderAttribute = type.GetCustomAttribute<HtmlHeaderAttribute>();
+                if (htmlHeaderAttribute == null || string.IsNullOrWhiteSpace(htmlHeaderAttribute.Url))
+                    throw new Exception("Url is not set in HtmlHeader Attribute");
+                var url = htmlHeaderAttribute.Url;
+                var userAgent = htmlHeaderAttribute.UserAgent;
+                var referer = htmlHeaderAttribute.Referrer;
+                return await DataScraperAsync<T>(url, referer, userAgent);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("DataScraperAsync Error: " + e.Message);
+            }
+        }
+
+        /// <summary>
+        /// 通用数据集抓取，需要配合HtmlHeaderAttribute使用
+        /// </summary>
+        public async Task<List<T>> DatasetScraperAsync<T>()
+            where T : new()
+        {
+            try
+            {
+                var type = typeof(T);
+                var htmlHeaderAttribute = type.GetCustomAttribute<HtmlHeaderAttribute>();
+                if (htmlHeaderAttribute == null || string.IsNullOrWhiteSpace(htmlHeaderAttribute.Url))
+                    throw new Exception("Url is not set in HtmlHeader Attribute");
+                var url = htmlHeaderAttribute.Url;
+                var userAgent = htmlHeaderAttribute.UserAgent;
+                var referer = htmlHeaderAttribute.Referrer;
+                return await DatasetScraperAsync<T>(url, referer, userAgent);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("DataScraperAsync Error: " + e.Message);
+            }
+        }
+
+        /// <summary>
+        /// 通用数据抓取
+        /// </summary>
+        public async Task<T> DataScraperAsync<T>(string url, string? referer = null, string? userAgent = null)
+            where T : new()
+        {
+            try
+            {
+                var type = typeof(T);
+                var client = _httpClientFactory.CreateClient(PaConsts.DefaultHttpClientName);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent ?? UserAgentGenerator.GetRandomUserAgent());
+                if (referer != null) client.DefaultRequestHeaders.Referrer = new Uri(referer);
+                var html = await client.GetStringAsync(url);
+                var htmlDocument = new HtmlDocument();
+                htmlDocument.LoadHtml(html);
+
+                var instance = new T();
+                foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    var valueAttribute = property.GetCustomAttribute<HtmlValueAttribute>();
+                    if (valueAttribute == null || (string.IsNullOrWhiteSpace(valueAttribute.HtmlTag) && string.IsNullOrWhiteSpace(valueAttribute.HtmlXPath)))
+                        throw new Exception("HtmlValue Attribute is not set");
+
+                    var valueXpath = BuildXPath(valueAttribute);
+                    var valueNode = htmlDocument.DocumentNode.SelectSingleNode(valueXpath);
+                    var value = string.IsNullOrWhiteSpace(valueAttribute.HtmlAttribute)
+                        ? valueNode?.InnerText
+                        : valueNode?.GetAttributeValue<string>(valueAttribute.HtmlAttribute, "");
+                    if (value != null && valueAttribute.IsTrim) value = value.Trim();
+                    property.SetPropertyValue(instance, value ?? "");
+                }
+
+                return instance;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("DataScraperAsync Error: " + e.Message);
+            }
+        }
+
+        /// <summary>
         /// 通用数据集抓取
         /// </summary>
         public async Task<List<T>> DatasetScraperAsync<T>(string url, string? referer = null, string? userAgent = null) where T : new()
         {
             try
             {
+                var type = typeof(T);
+                if (string.IsNullOrWhiteSpace(url))
+                {
+                    var htmlHeaderAttribute = type.GetCustomAttribute<HtmlHeaderAttribute>();
+                    if (htmlHeaderAttribute == null || string.IsNullOrWhiteSpace(htmlHeaderAttribute.Url))
+                        throw new Exception("Url is not set in HtmlHeader Attribute");
+                    url = htmlHeaderAttribute.Url;
+                    userAgent = htmlHeaderAttribute.UserAgent;
+                    referer = htmlHeaderAttribute.Referrer;
+                }
+
                 var client = _httpClientFactory.CreateClient(PaConsts.DefaultHttpClientName);
-                client.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent ?? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36");
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent ?? UserAgentGenerator.GetRandomUserAgent());
                 if (referer != null) client.DefaultRequestHeaders.Referrer = new Uri(referer);
                 var html = await client.GetStringAsync(url);
                 var htmlDocument = new HtmlDocument();
                 htmlDocument.LoadHtml(html);
 
-                var type = typeof(T);
                 var htmlContainerAttribute = type.GetCustomAttribute<HtmlContainerAttribute>();
                 if (htmlContainerAttribute == null || (string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlTag) && string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlXPath)))
                     throw new Exception("HtmlContainer Attribute is not set");
@@ -94,7 +191,7 @@ namespace Aneiang.Pa.Dynamic
             }
             catch (Exception e)
             {
-                throw new Exception("DatasetScraper Error: " + e.Message);
+                throw new Exception("DatasetScraperAsync Error: " + e.Message);
             }
         }
 
@@ -114,41 +211,41 @@ namespace Aneiang.Pa.Dynamic
             switch (attribute)
             {
                 case HtmlContainerAttribute htmlContainerAttribute:
-                {
-                    if (!string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlXPath))
                     {
-                        return htmlContainerAttribute.HtmlXPath;
+                        if (!string.IsNullOrWhiteSpace(htmlContainerAttribute.HtmlXPath))
+                        {
+                            return htmlContainerAttribute.HtmlXPath;
+                        }
+                        xpath = $"//{htmlContainerAttribute.HtmlTag}";
+                        htmlId = htmlContainerAttribute.HtmlId;
+                        htmlClass = htmlContainerAttribute.HtmlClass;
+                        index = htmlContainerAttribute.Index;
+                        break;
                     }
-                    xpath = $"//{htmlContainerAttribute.HtmlTag}";
-                    htmlId = htmlContainerAttribute.HtmlId;
-                    htmlClass = htmlContainerAttribute.HtmlClass;
-                    index = htmlContainerAttribute.Index;
-                    break;
-                }
                 case HtmlItemAttribute htmlItemAttribute:
-                {
-                    if (!string.IsNullOrWhiteSpace(htmlItemAttribute.HtmlXPath))
                     {
-                        return htmlItemAttribute.HtmlXPath;
+                        if (!string.IsNullOrWhiteSpace(htmlItemAttribute.HtmlXPath))
+                        {
+                            return htmlItemAttribute.HtmlXPath;
+                        }
+                        xpath = $".//{htmlItemAttribute.HtmlTag}";
+                        htmlId = htmlItemAttribute.HtmlId;
+                        htmlClass = htmlItemAttribute.HtmlClass;
+                        index = htmlItemAttribute.Index;
+                        break;
                     }
-                    xpath = $".//{htmlItemAttribute.HtmlTag}";
-                    htmlId = htmlItemAttribute.HtmlId;
-                    htmlClass = htmlItemAttribute.HtmlClass;
-                    index = htmlItemAttribute.Index;
-                    break;
-                }
                 case HtmlValueAttribute htmlValueAttribute:
-                {
-                    if (!string.IsNullOrWhiteSpace(htmlValueAttribute.HtmlXPath))
                     {
-                        return htmlValueAttribute.HtmlXPath;
+                        if (!string.IsNullOrWhiteSpace(htmlValueAttribute.HtmlXPath))
+                        {
+                            return htmlValueAttribute.HtmlXPath;
+                        }
+                        xpath = $".//{htmlValueAttribute.HtmlTag}";
+                        htmlId = htmlValueAttribute.HtmlId;
+                        htmlClass = htmlValueAttribute.HtmlClass;
+                        index = htmlValueAttribute.Index;
+                        break;
                     }
-                    xpath = $".//{htmlValueAttribute.HtmlTag}";
-                    htmlId = htmlValueAttribute.HtmlId;
-                    htmlClass = htmlValueAttribute.HtmlClass;
-                    index = htmlValueAttribute.Index;
-                    break;
-                }
             }
 
             if (!string.IsNullOrWhiteSpace(htmlId))
@@ -160,7 +257,7 @@ namespace Aneiang.Pa.Dynamic
                 var classList = htmlClass.Trim().Split(" ");
                 foreach (var c in classList)
                 {
-                    containsXpath+= $"@class='{c}' and";
+                    containsXpath += $"@class='{c}' and";
                 }
             }
 

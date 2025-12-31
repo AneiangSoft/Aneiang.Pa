@@ -14,11 +14,6 @@ namespace Aneiang.Pa.AspNetCore.Constants
         /// 默认路由前缀
         /// </summary>
         public const string DefaultRoutePrefix = "api/scraper";
-
-        /// <summary>
-        /// GetAvailableSources Action 名称
-        /// </summary>
-        public const string GetAvailableSourcesActionName = "GetAvailableSources";
     }
 }
 

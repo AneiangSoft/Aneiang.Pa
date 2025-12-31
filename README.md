@@ -285,13 +285,17 @@ builder.Services.AddNewsScraper(builder.Configuration);
 // 添加爬虫控制器支持
 builder.Services.AddScraperController(options =>
 {
-    options.RoutePrefix = "api/scraper"; // 路由前缀，默认 "api/scraper"
-    options.UseLowercaseInRoute = true; // 路由使用小写
-    options.EnableResponseCaching = false; // 是否启用响应缓存
-    options.CacheDurationSeconds = 300; // 缓存时长（秒）
+    options.RoutePrefix = "api/scraper";      // 路由前缀，默认 "api/scraper"
+    options.UseLowercaseInRoute = true;       // 路由使用小写
+    options.EnableResponseCaching = true;     // 启用响应缓存
+    options.CacheDurationSeconds = 300;       // 缓存时长（秒）
 });
 
 var app = builder.Build();
+
+// 启用响应缓存中间件（必须在使用缓存的端点之前调用）
+app.UseResponseCaching();
+
 app.MapControllers();
 app.Run();
 ```

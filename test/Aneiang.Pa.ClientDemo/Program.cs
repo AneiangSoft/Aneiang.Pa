@@ -20,7 +20,7 @@ builder.Services.AddScraperController(options =>
 {
     options.RoutePrefix = "api/scraper"; // 路由前缀，可以自定义，如 "api/news" 或 "api/scraper/v1"
     options.UseLowercaseInRoute = true; // 路由使用小写，如 /api/scraper/weibo
-    options.EnableResponseCaching = false; // 是否启用响应缓存（建议生产环境启用）
+    options.EnableResponseCaching = true; // 是否启用响应缓存（建议生产环境启用）
     options.CacheDurationSeconds = 300; // 缓存时长（秒），默认5分钟
 });
 
@@ -142,6 +142,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// 启用响应缓存中间件
+app.UseResponseCaching();
 
 app.UseAuthorization();
 
