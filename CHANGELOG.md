@@ -1,5 +1,8 @@
 # Aneiang.Pa 版本变更记录
 
+## 2.1.2 (2026-01-02)
+- 新增：`AneiangGenericListResult`/`AneiangGenericResult` 统一返回 `UpdatedTime`（当前时间）。
+
 ## 2.1.1 (2025-12-31)
 - 修复：若干细节问题以及稳定性提升。
 - 优化：代码清理及文档微调。

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Aneiang.Pa.Core.News.Models
@@ -8,6 +9,11 @@ namespace Aneiang.Pa.Core.News.Models
     public class AneiangGenericListResult<T> where T : class
     {
         /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime UpdatedTime { get; set; }
+
+        /// <summary>
         /// 初始化结果
         /// </summary>
         /// <param name="isSuccessd">是否成功</param>
@@ -16,6 +22,7 @@ namespace Aneiang.Pa.Core.News.Models
         {
             IsSuccessd = isSuccessd;
             ErrorMessage = errorMessage;
+            UpdatedTime = DateTime.Now;
         }
 
         /// <summary>
@@ -50,6 +57,11 @@ namespace Aneiang.Pa.Core.News.Models
     public class AneiangGenericResult<T> where T : class
     {
         /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime UpdatedTime { get; set; }
+
+        /// <summary>
         /// 初始化结果
         /// </summary>
         /// <param name="isSuccessd">是否成功</param>
@@ -58,6 +70,7 @@ namespace Aneiang.Pa.Core.News.Models
         {
             IsSuccessd = isSuccessd;
             ErrorMessage = errorMessage;
+            UpdatedTime = DateTime.Now;
         }
 
         /// <summary>
