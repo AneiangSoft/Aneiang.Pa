@@ -1,5 +1,14 @@
 # Aneiang.Pa 版本变更记录
 
+## 2.1.4 (2026-01-07)
+- 新增（AspNetCore）：支持“爬取数据缓存”而非响应缓存，支持 None / Memory / Redis，可配置，默认缓存 1 小时。
+- 新增（AspNetCore）：对外扩展方法收敛为两个入口：`AddPaScraperApi` 与 `AddPaScraperAuthorization`，简化接入。
+- 优化（AspNetCore）：授权从 `AddPaScraperApi` 中拆出，按需显式启用，仍支持 ApiKey / Custom / Combined。
+- 修复（AspNetCore）：Redis 注册与配置读取时序问题，避免 `configuration` 为空导致运行时报错。
+- 优化（AspNetCore）：`CacheProvider != Redis` 时不注册 Redis，避免无意义连接与配置。
+- 变更（AspNetCore）：多目标框架 `netstandard2.1;net6.0`，覆盖 .NET Core 3.0+ 与 .NET 5/6/7/8/9+。
+- 改进：README.md 布局与说明优化（折叠长示例等）。
+
 ## 2.1.2 (2026-01-02)
 - 新增：`AneiangGenericListResult`/`AneiangGenericResult` 统一返回 `UpdatedTime`（当前时间）。
 
