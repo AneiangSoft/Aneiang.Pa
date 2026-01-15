@@ -35,6 +35,9 @@
 - GitHub：<https://github.com/AneiangSoft/Aneiang.Pa>
 - Gitee（同步）：<https://gitee.com/aneiangsoft/Aneiang.Pa>
 - 热点新闻在线 Demo：<https://news.aneiang.com>
+>- DEMO代码已经开源，支持DOCKER一键部署
+>- GitHub：<https://github.com/AneiangSoft/Aneiang.Pa.News>
+>- Gitee（同步）：<https://gitee.com/aneiangsoft/Aneiang.Pa.News>
 
 ---
 
