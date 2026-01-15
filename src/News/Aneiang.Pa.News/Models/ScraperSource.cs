@@ -1,4 +1,4 @@
-﻿namespace Aneiang.Pa.News.Models
+namespace Aneiang.Pa.News.Models
 {
     public enum ScraperSource
     {
@@ -57,6 +57,14 @@
         /// <summary>
         /// 博客园
         /// </summary>
-        CnBlog
+        CnBlog,
+        /// <summary>
+        /// IT之家
+        /// </summary>
+        ItHome,
+        /// <summary>
+        /// 36氪
+        /// </summary>
+        _36kr
     }
 }

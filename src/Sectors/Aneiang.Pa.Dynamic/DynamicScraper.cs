@@ -254,11 +254,12 @@ namespace Aneiang.Pa.Dynamic
             }
             if (!string.IsNullOrWhiteSpace(htmlClass))
             {
-                var classList = htmlClass.Trim().Split(" ");
-                foreach (var c in classList)
-                {
-                    containsXpath += $"@class='{c}' and";
-                }
+                //var classList = htmlClass.Trim().Split(" ");
+                //foreach (var c in classList)
+                //{
+                //    containsXpath += $"@class='{c}' and";
+                //}
+                containsXpath += $"@class='{htmlClass}'";
             }
 
             if (containsXpath.EndsWith("and"))

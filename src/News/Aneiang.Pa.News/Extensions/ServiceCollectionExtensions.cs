@@ -1,3 +1,4 @@
+using Aneiang.Pa._36kr.News;
 using Aneiang.Pa.BaiDu.Models;
 using Aneiang.Pa.BaiDu.News;
 using Aneiang.Pa.Bilibili.Models;
@@ -17,6 +18,8 @@ using Aneiang.Pa.HuPu.Models;
 using Aneiang.Pa.HuPu.News;
 using Aneiang.Pa.IFeng.Models;
 using Aneiang.Pa.IFeng.News;
+using Aneiang.Pa.ItHome.Models;
+using Aneiang.Pa.ItHome.News;
 using Aneiang.Pa.JueJin.Models;
 using Aneiang.Pa.JueJin.News;
 using Aneiang.Pa.News.News;
@@ -34,6 +37,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Net.Http;
+using Aneiang.Pa._36kr.Models;
 
 namespace Aneiang.Pa.News.Extensions
 {
@@ -116,6 +120,13 @@ namespace Aneiang.Pa.News.Extensions
 
             services.AddScraper<ICnBlogNewScraper, CnBlogNewScraper, CnBlogScraperOptions>("Scraper:CnBlog", configuration, httpConfigureHandler, false);
             services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<ICnBlogNewScraper>());
+
+            services.AddScraper<IItHomeNewScraper, ItHomeNewScraper, ItHomeScraperOptions>("Scraper:ItHome", configuration, httpConfigureHandler, false);
+            services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<IItHomeNewScraper>());
+
+            services.AddScraper<I36krNewScraper, _36krNewScraper, _36krScraperOptions > ("Scraper:_36kr", configuration, httpConfigureHandler, false);
+            services.AddSingleton<INewsScraper>(provider => provider.GetRequiredService<I36krNewScraper>());
+
 
             services.AddDynamicScraper();
             services.AddSingleton<INewsScraperFactory, NewsScraperFactory>();

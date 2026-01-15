@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Aneiang.Pa.36kr\Aneiang.Pa.36kr.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.BaiDu\Aneiang.Pa.BaiDu.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.Bilibili\Aneiang.Pa.Bilibili.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.CnBlog\Aneiang.Pa.CnBlog.csproj" />
@@ -14,6 +15,7 @@
     <ProjectReference Include="..\Aneiang.Pa.DouYin\Aneiang.Pa.DouYin.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.HuPu\Aneiang.Pa.HuPu.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.IFeng\Aneiang.Pa.IFeng.csproj" />
+    <ProjectReference Include="..\Aneiang.Pa.ItHome\Aneiang.Pa.ItHome.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.JueJin\Aneiang.Pa.JueJin.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.Tencent\Aneiang.Pa.Tencent.csproj" />
     <ProjectReference Include="..\Aneiang.Pa.ThePaper\Aneiang.Pa.ThePaper.csproj" />

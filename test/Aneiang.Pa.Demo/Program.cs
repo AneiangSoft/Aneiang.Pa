@@ -63,7 +63,7 @@ async Task ScraperNews()
     using (var scope = builder.Services.CreateScope())
     {
         var newsScraperFactory = scope.ServiceProvider.GetRequiredService<INewsScraperFactory>();
-        var newsScraper = newsScraperFactory.GetScraper(ScraperSource.Bilibili);
+        var newsScraper = newsScraperFactory.GetScraper(ScraperSource._36kr);
         var newsResult = await newsScraper.GetNewsAsync();
         foreach (var news in newsResult.Data)
         {

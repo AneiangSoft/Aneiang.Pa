@@ -14,6 +14,7 @@
     <Project Path="src/Core/Aneiang.Pa.Core/Aneiang.Pa.Core.csproj" />
   </Folder>
   <Folder Name="/src/News/">
+    <Project Path="src/News/Aneiang.Pa.36kr/Aneiang.Pa.36kr.csproj" Id="30f27bae-fb5e-4bc7-af5f-253c0b436629" />
     <Project Path="src/News/Aneiang.Pa.BaiDu/Aneiang.Pa.BaiDu.csproj" />
     <Project Path="src/News/Aneiang.Pa.Bilibili/Aneiang.Pa.Bilibili.csproj" />
     <Project Path="src/News/Aneiang.Pa.CnBlog/Aneiang.Pa.CnBlog.csproj" Id="dfaef650-3e00-4e6e-b404-4e6d34600e8c" />
@@ -22,6 +23,7 @@
     <Project Path="src/News/Aneiang.Pa.DouYin/Aneiang.Pa.DouYin.csproj" />
     <Project Path="src/News/Aneiang.Pa.HuPu/Aneiang.Pa.HuPu.csproj" Id="d7a43233-b1f9-4d85-a5a8-dca9a0651f6a" />
     <Project Path="src/News/Aneiang.Pa.IFeng/Aneiang.Pa.IFeng.csproj" Id="68956e5f-734e-40c7-9265-89919addae1a" />
+    <Project Path="src/News/Aneiang.Pa.ItHome/Aneiang.Pa.ItHome.csproj" Id="a7a9d94d-cd34-4d53-9f63-53342277d936" />
     <Project Path="src/News/Aneiang.Pa.JueJin/Aneiang.Pa.JueJin.csproj" Id="c8a36660-63e8-4eb8-a499-11661e8819e9" />
     <Project Path="src/News/Aneiang.Pa.News/Aneiang.Pa.News.csproj" Id="385a4008-4713-4a18-a664-c9c4d23dc8dc" />
     <Project Path="src/News/Aneiang.Pa.Tencent/Aneiang.Pa.Tencent.csproj" Id="e5a579e9-7aa2-4772-8e72-71492dbfd7da" />
