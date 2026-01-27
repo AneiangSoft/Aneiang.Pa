@@ -42,7 +42,7 @@ namespace Aneiang.Pa._36kr.News
             try
             {
                 _options.Check();
-                var data = await _dynamicScraper.DatasetScraperAsync<_36krOriginalResult>($"{_options.BaseUrl}{_options.NewsUrl}{DateTime.Now:yyyy-MM-dd}/1",
+                var data = await _dynamicScraper.DatasetScraperAsync<_36krOriginalResult>($"{_options.BaseUrl}{_options.NewsUrl}",
                     _options.BaseUrl,
                     _options.UserAgent);
 

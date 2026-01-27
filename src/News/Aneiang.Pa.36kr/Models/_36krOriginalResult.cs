@@ -2,26 +2,20 @@ using Aneiang.Pa.Dynamic.Attributes;
 
 namespace Aneiang.Pa._36kr.Models
 {
-    [HtmlContainer("div", htmlClass: "article-list", index: 1)]
-    [HtmlItem(htmlXPath: ".//div[contains(@class, 'article-wrapper')]")]
-    //[HtmlItem("div", htmlClass: "article-wrapper")]
+    [HtmlContainer("div", htmlClass: "newsflash-catalog-flow-list", index: 1)]
+    [HtmlItem(htmlXPath: ".//div[contains(@class, 'flow-item')]")]
     public class _36krOriginalResult
     {
-        [HtmlValue("a",htmlClass: "article-item-title weight-bold")]
+        [HtmlValue("a",htmlClass: "item-title")]
         public string Title { get; set; }
 
-        [HtmlValue("a", htmlClass: "article-item-title weight-bold", attribute: "href")]
+        [HtmlValue("a", htmlClass: "item-title", attribute: "href")]
         public string Id { get; set; }
 
-        [HtmlValue("a", htmlClass: "article-item-title weight-bold", attribute: "href")]
+        [HtmlValue("a", htmlClass: "item-title", attribute: "href")]
         public string Url { get; set; }
 
-        [HtmlValue("a", htmlClass: "article-item-description ellipsis-2")]
+        [HtmlValue(htmlXPath: ".//div[@class=\"item-desc\"]/span[1]")]
         public string Desc { get; set; }
-
-        [HtmlValue(htmlXPath: ".//span[@class=\"kr-flow-bar-hot\"]/span[1]")]
-        public string Hot { get; set; }
-        [HtmlValue("a", htmlClass: "kr-flow-bar-author")]
-        public string Author { get; set; }
     }
 }
