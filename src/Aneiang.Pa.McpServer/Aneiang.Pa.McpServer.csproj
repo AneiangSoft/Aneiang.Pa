@@ -5,8 +5,29 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Description>Aneiang.Pa MCP Server - Model Context Protocol implementation for Aneiang.Pa</Description>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>aneiang-pa-mcp</ToolCommandName>
+    <PackageId>Aneiang.Pa.Mcp</PackageId>
+
+    <!-- Tool 包不应继承仓库的库包元数据（Version/Readme/Icon 等），这里显式覆写 -->
+    <IsPackable>true</IsPackable>
+    <IncludeSymbols>false</IncludeSymbols>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PackageReadmeFile></PackageReadmeFile>
+    <PackageIcon></PackageIcon>
+
+    <Version>0.1.0</Version>
+    <Authors>AneiangSoft</Authors>
+    <Description>Aneiang.Pa MCP Server (dotnet tool). Provides MCP tools for news and lottery queries.</Description>
+    <RepositoryUrl>https://github.com/AneiangSoft/Pa.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="..\..\README.md" />
+    <None Remove="..\..\assets\icon.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

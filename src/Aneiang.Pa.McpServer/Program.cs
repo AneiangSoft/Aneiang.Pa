@@ -13,9 +13,10 @@ using ModelContextProtocol.Server;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(LogLevel.Warning);
 builder.Logging.AddConsole(consoleLogOptions =>
 {
-    consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Trace;
+    consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Warning;
 });
 
 builder.Services.AddPaScraper(builder.Configuration);
