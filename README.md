@@ -13,7 +13,7 @@
 <p align="center">
   <a href="https://www.nuget.org/packages/Aneiang.Pa"><img src="https://img.shields.io/nuget/v/Aneiang.Pa.svg?style=flat-square&logo=nuget" /></a>
   <a href="https://www.nuget.org/packages/Aneiang.Pa"><img src="https://img.shields.io/nuget/dt/Aneiang.Pa.svg?style=flat-square&logo=nuget" /></a>
-  <img src="https://img.shields.io/badge/target-netstandard2.1-blue?style=flat-square" />
+  <img src="https://img.shields.io/badge/target-netstandard2.1%20%7C%20net6.0-blue?style=flat-square" />
   <img src="https://img.shields.io/badge/status-active-success?style=flat-square" />
   <img src="https://img.shields.io/github/stars/AneiangSoft/Aneiang.Pa" />
 </p>
@@ -144,6 +144,13 @@ dotnet run --project test/Aneiang.Pa.Demo
 ```
 
 运行后，将在控制台看到抓取到的百度热榜数据。
+
+---
+
+## 版本与更新
+
+- 版本号以 `Directory.Build.props` 中的 `Version` 为准（当前为 `2.1.5`）。
+- 版本变更记录见 [CHANGELOG.md](CHANGELOG.md)。
 
 ---
 

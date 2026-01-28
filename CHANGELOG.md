@@ -1,5 +1,14 @@
 # Aneiang.Pa 版本变更记录
 
+## 2.1.6 (2026-01-15)
+- 新增（News）：新增 IT之家热榜爬虫（`Aneiang.Pa.ItHome`）。
+- 新增（News）：新增 36氪「48小时人气阅读」抓取支持（`Aneiang.Pa.36kr`）。
+- 更新（News）：`Aneiang.Pa.News` 增补注册与 `ScraperSource` 源枚举以支持新平台。
+- 优化（Dynamic）：动态爬虫实现细节调整（见 `src/Sectors/Aneiang.Pa.Dynamic/DynamicScraper.cs` 相关提交）。
+- 更新（Demo）：示例与配置随新增源做了同步调整。
+- 文档：README.md 更新。
+- 改进（AspNetCore）：修复没有配置缓存配置是，Redis注册报错问题。
+
 ## 2.1.4 (2026-01-07)
 - 新增（AspNetCore）：支持“爬取数据缓存”而非响应缓存，支持 None / Memory / Redis，可配置，默认缓存 1 小时。
 - 新增（AspNetCore）：对外扩展方法收敛为两个入口：`AddPaScraperApi` 与 `AddPaScraperAuthorization`，简化接入。

@@ -93,6 +93,7 @@ namespace Aneiang.Pa.AspNetCore.Extensions
             var cacheProvider = scraperSection.GetValue("CacheProvider", ScraperCacheProvider.None);
 
             // 只有当 CacheProvider=Redis 时才注册 Redis 分布式缓存（避免无意义连接/配置）
+            // 同时才注册 RedisCacheService，避免未注册 IDistributedCache 时启动报错
             if (cacheProvider == ScraperCacheProvider.Redis)
             {
                 var redisSection = scraperSection.GetSection("Redis");
@@ -109,12 +110,13 @@ namespace Aneiang.Pa.AspNetCore.Extensions
                     o.Configuration = redisConfiguration;
                     o.InstanceName = instanceName;
                 });
+
+                services.TryAddSingleton<RedisCacheService>();
             }
 
             // 依赖项注册（按需）
             services.TryAddSingleton<NoCacheService>();
             services.TryAddSingleton<MemoryCacheService>();
-            services.TryAddSingleton<RedisCacheService>();
 
             // 内存缓存（总是安全可注册）
             services.TryAddSingleton<IMemoryCache, MemoryCache>();

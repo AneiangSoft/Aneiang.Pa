@@ -12,10 +12,10 @@
     <Authors>AneiangSoft</Authors>
     <Company>AneiangSoft</Company>
     <Product>Aneiang.Pa</Product>
-    <Version>2.1.4</Version>
+    <Version>2.1.6</Version>
     <PackageIcon>icon.png</PackageIcon>
-    <Description>一个基于 .NET 开箱即用的爬虫库，使用复杂度极低。项目将爬虫分为 News (热榜) 和 Sectors (特定领域) 两大类。热榜预设支持微博、知乎、B站、百度、抖音、虎扑、头条、腾讯、掘金、澎湃、凤凰网、豆瓣、CSDN、博客园等平台。特定领域提供动态数据集爬取 (Dynamic) 和彩票数据爬取 (Lottery) 等更灵活的爬虫功能。</Description>
-    <PackageDescription>一个基于 .NET 开箱即用的爬虫库，使用复杂度极低。项目将爬虫分为 News (热榜) 和 Sectors (特定领域) 两大类。热榜预设支持微博、知乎、B站、百度、抖音、虎扑、头条、腾讯、掘金、澎湃、凤凰网、豆瓣、CSDN、博客园等平台。特定领域提供动态数据集爬取 (Dynamic) 和彩票数据爬取 (Lottery) 等更灵活的爬虫功能。</PackageDescription>
+    <Description>一个基于 .NET 开箱即用的爬虫库，使用复杂度极低。项目将爬虫分为 News (热榜) 和 Sectors (特定领域) 两大类。热榜预设支持微博、知乎、B站、百度、抖音、虎扑、头条、腾讯、掘金、澎湃、凤凰网、豆瓣、CSDN、博客园、IT之家、36氪平台。特定领域提供动态数据集爬取 (Dynamic) 和彩票数据爬取 (Lottery) 等更灵活的爬虫功能。</Description>
+    <PackageDescription>一个基于 .NET 开箱即用的爬虫库，使用复杂度极低。项目将爬虫分为 News (热榜) 和 Sectors (特定领域) 两大类。热榜预设支持微博、知乎、B站、百度、抖音、虎扑、头条、腾讯、掘金、澎湃、凤凰网、豆瓣、CSDN、博客园、IT之家、36氪等平台。特定领域提供动态数据集爬取 (Dynamic) 和彩票数据爬取 (Lottery) 等更灵活的爬虫功能。</PackageDescription>
     <PackageProjectUrl>https://github.com/AneiangSoft/Pa</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AneiangSoft/Pa.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
