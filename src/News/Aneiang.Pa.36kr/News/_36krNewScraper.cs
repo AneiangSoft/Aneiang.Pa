@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 namespace Aneiang.Pa._36kr.News
 {
     /// <summary>
-    /// 博客园热门爬虫
+    /// 36氪热门爬虫
     /// </summary>
     public class _36krNewScraper : I36krNewScraper
     {
