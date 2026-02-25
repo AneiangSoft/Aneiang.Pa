@@ -8,7 +8,7 @@ namespace Aneiang.Pa._36kr.Models
         public _36krScraperOptions()
         {
             BaseUrl = "https://www.36kr.com";
-            NewsUrl = "/hot-list/renqi/";
+            NewsUrl = "/newsflashes";
         }
     }
 }

@@ -2,15 +2,16 @@ Param(
     [string]$ApiKey = $env:NUGET_API_KEY,
     [string]$Source = "https://api.nuget.org/v3/index.json",
     [string]$Configuration = "Release",
-    [string]$Version
+    [string]$Version,
+    [switch]$PackOnly
 )
 
 # Pack and push all packable projects under the src directory.
 # Usage:
 #   $env:NUGET_API_KEY = "<your-key>"
-#   ./scripts/publish.ps1 [-ApiKey xxx] [-Source url] [-Configuration Release] [-Version 1.0.0]
+#   ./scripts/publish.ps1 [-ApiKey xxx] [-Source url] [-Configuration Release] [-Version 1.0.0] [-PackOnly]
 
-if (-not $ApiKey) {
+if (-not $ApiKey -and -not $PackOnly) {
     Write-Error "Missing NuGet ApiKey. Pass -ApiKey or set env NUGET_API_KEY."
     exit 1
 }
@@ -24,7 +25,11 @@ Get-ChildItem $output -Recurse -Include *.nupkg, *.snupkg -ErrorAction SilentlyC
 
 # Get all projects from the 'src' directory
 $srcPath = Join-Path $repoRoot "src"
-$csprojs = Get-ChildItem -Path $srcPath -Recurse -Filter *.csproj | Where-Object { $_.FullName -notmatch '\\test\\' }
+$csprojs = Get-ChildItem -Path $srcPath -Recurse -Filter *.csproj |
+    Where-Object {
+        $_.FullName -notmatch '\\test\\' -and
+        $_.FullName -notmatch '\\Aneiang\.Pa\.McpServer\\Aneiang\.Pa\.McpServer\.csproj$'
+    }
 
 if (-not $csprojs) {
     Write-Error "No packable projects found in the 'src' directory."
@@ -43,6 +48,11 @@ $packages = Get-ChildItem $output -Filter *.nupkg -ErrorAction SilentlyContinue
 if (-not $packages) {
     Write-Error "No nupkg generated."
     exit 1
+}
+
+if ($PackOnly) {
+    Write-Host "[OK] Pack done (PackOnly). Output: $output"
+    exit 0
 }
 
 foreach ($pkg in $packages) {
