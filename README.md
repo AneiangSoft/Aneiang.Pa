@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  一个基于 .NET 的开箱即用爬虫库：热榜 / 特定领域 / Web API / 缓存 / 可选授权
+  一个基于 .NET 开箱即用的爬虫库，使用复杂度极低，提供更灵活的爬虫。预设了对多个主流平台热榜的爬取支持，包括微博、知乎、B 站、百度、抖音、虎扑、头条、腾讯、掘金、澎湃、凤凰网、豆瓣、CSDN、博客园等。项目完全开源，后续将持续增加更多平台和数据类型的支持。
 </p>
 
 <p align="center">
@@ -22,8 +22,8 @@
 
 ## ✨ 亮点特性
 
-- ✅ **多平台热榜**：微博 / 知乎 / B 站 / 百度 / 抖音 / 虎扑 / 头条 / 腾讯 / 掘金 / 澎湃 / 凤凰网 / 豆瓣 / CSDN / 博客园等
-- ✅ **特定领域爬虫**：`Dynamic`（动态数据集爬取）/ `Lottery`（彩票数据）
+- ✅ **多平台热榜**：微博 / 知乎 / B 站 / 百度 / 抖音 / 虎扑 / 头条 / 腾讯 / 掘金 / 澎湃 / 凤凰网 / 豆瓣 / CSDN / 博客园 / 彩票数据等
+- ✅ **动态模型爬取**：`Aneiang.Pa.Dynamic`
 - ✅ **ASP.NET Core Web API**：开箱即用的 RESTful API（支持 **数据缓存** 与 **可选授权**）
 - ✅ **缓存支持**：None / Memory / Redis（默认 1 小时，可配置）
 - ✅ **代理池**：轮询/随机 + 认证代理，降低封禁风险
@@ -106,6 +106,7 @@ dotnet add package Aneiang.Pa.BaiDu
 | **Aneiang.Pa** | **聚合包，包含全部平台实现** |
 | Aneiang.Pa.Core | 核心接口与模型、代理池功能 |
 | Aneiang.Pa.AspNetCore | ASP.NET Core Web API 扩展（提供 RESTful API 控制器） |
+| Aneiang.Pa.Dynamic | 动态爬虫，可爬取任意网站的数据集合 |
 | **--- News (热榜) ---** | **---** |
 | Aneiang.Pa.News | 热榜聚合包，包含以下所有新闻平台 |
 | Aneiang.Pa.BaiDu | 百度热榜爬虫 |
@@ -122,8 +123,6 @@ dotnet add package Aneiang.Pa.BaiDu
 | Aneiang.Pa.IFeng | 凤凰网热榜爬虫 |
 | Aneiang.Pa.Csdn | CSDN热榜爬虫 |
 | Aneiang.Pa.CnBlog | 博客园热榜爬虫 |
-| **--- Sectors (特定领域) ---** | **---** |
-| Aneiang.Pa.Dynamic | 动态爬虫，可爬取任意网站的数据集合 |
 | Aneiang.Pa.Lottery | 彩票数据爬虫 |
 
 ---
@@ -417,11 +416,6 @@ builder.Services.AddPaScraperAuthorization(builder.Configuration, configure: opt
 
 ## ✨ 高阶用法 - 动态爬取（Aneiang.Pa.Dynamic）
 
-> 为了避免 README 过长，这里将详细示例折叠。你可以直接展开查看完整示例。
-
-<details>
-<summary><b>展开：Dynamic 动态爬取完整示例（CnBlogs）</b></summary>
-
 ### 引入 NuGet
 
 ```bash
@@ -502,8 +496,6 @@ public class CnBlogOriginalResult
 - `HtmlValueAttribute`：字段取值特性（支持 id/class/xpath，可指定 attribute）
 
 **PS：以上三个特性都支持 XPath 检索 HTML 标签，`HTMLXPath` 不为空时，其他属性不生效。**
-
-</details>
 
 ---
 
