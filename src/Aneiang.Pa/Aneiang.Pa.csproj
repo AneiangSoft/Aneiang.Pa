@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sectors\Aneiang.Pa.Dynamic\Aneiang.Pa.Dynamic.csproj" />
+    <ProjectReference Include="..\Core\Aneiang.Pa.Dynamic\Aneiang.Pa.Dynamic.csproj" />
+    <ProjectReference Include="..\Lotteries\Aneiang.Pa.Lottery\Aneiang.Pa.Lottery.csproj" />
     <ProjectReference Include="..\News\Aneiang.Pa.News\Aneiang.Pa.News.csproj" />
-    <ProjectReference Include="..\Sectors\Aneiang.Pa.Lottery\Aneiang.Pa.Lottery.csproj" />
   </ItemGroup>
 
 </Project>

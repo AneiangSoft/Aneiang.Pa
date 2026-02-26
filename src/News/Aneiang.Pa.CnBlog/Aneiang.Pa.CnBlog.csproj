@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Sectors\Aneiang.Pa.Dynamic\Aneiang.Pa.Dynamic.csproj" />
+    <ProjectReference Include="..\..\Core\Aneiang.Pa.Dynamic\Aneiang.Pa.Dynamic.csproj" />
   </ItemGroup>
 
 </Project>

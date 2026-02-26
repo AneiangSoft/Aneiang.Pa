@@ -13,6 +13,10 @@
   </Folder>
   <Folder Name="/src/Core/">
     <Project Path="src/Core/Aneiang.Pa.Core/Aneiang.Pa.Core.csproj" />
+    <Project Path="src/Core/Aneiang.Pa.Dynamic/Aneiang.Pa.Dynamic.csproj" />
+  </Folder>
+  <Folder Name="/src/Lotteries/">
+    <Project Path="src/Lotteries/Aneiang.Pa.Lottery/Aneiang.Pa.Lottery.csproj" />
   </Folder>
   <Folder Name="/src/News/">
     <Project Path="src/News/Aneiang.Pa.36kr/Aneiang.Pa.36kr.csproj" Id="30f27bae-fb5e-4bc7-af5f-253c0b436629" />
@@ -32,10 +36,6 @@
     <Project Path="src/News/Aneiang.Pa.TouTiao/Aneiang.Pa.TouTiao.csproj" Id="1c1d0399-5f26-411d-beab-287e8824452d" />
     <Project Path="src/News/Aneiang.Pa.WeiBo/Aneiang.Pa.WeiBo.csproj" />
     <Project Path="src/News/Aneiang.Pa.ZhiHu/Aneiang.Pa.ZhiHu.csproj" />
-  </Folder>
-  <Folder Name="/src/Sectors/">
-    <Project Path="src/Sectors/Aneiang.Pa.Lottery/Aneiang.Pa.Lottery.csproj" Id="929ca852-e42c-4896-84ef-2607d55d2464" />
-     <Project Path="src/Sectors/Aneiang.Pa.Dynamic/Aneiang.Pa.Dynamic.csproj" Id="c4b1ad3a-78c0-463f-af1d-afa20174c6e1" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Aneiang.Pa.ClientDemo/Aneiang.Pa.ClientDemo.csproj" Id="68dacdc0-4a81-41ef-b740-6b0c9fdd4ba7" />
