@@ -1,0 +1,13 @@
+name: BingHomeImage
+category: Demo
+display_name: Bing 每日壁纸
+fetch:
+  url: https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8
+parse:
+  type: json
+  items_path: "$.images"
+  fields:
+    title: { selector: "title" }
+    copyright: { selector: "copyright" }
+    url: { selector: "url" }
+    startdate: { selector: "startdate" }

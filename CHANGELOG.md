@@ -1,6 +1,49 @@
 # Aneiang.Pa 版本变更记录
 
+## 3.0.0 (2026-06-21) — 架构级演进
+
+### 重大变更（Breaking + Compatible）
+- **统一抽象层**：所有爬虫现在实现 `IScraper<TResult>` 与 `ScraperDescriptor`，支持按 Category/Source 字符串注册（取代 `ScraperSource` 枚举的硬绑定，旧枚举仍保留向后兼容）。
+- **目录重组**：`src/News/` → `src/Modules/News/`；`src/Lotteries/` → `src/Modules/Lottery/`；`src/Core/Aneiang.Pa.Dynamic/` → `src/Modules/Dynamic/`；新增 `src/Client/Aneiang.Pa.Client/`。
+
+### 新增（Added）
+- **管道架构（Aneiang.Pa.Core.Pipeline）**：基于中间件模型，统一处理日志/缓存/限流/重试/熔断/超时/指标/追踪等横切关注点。
+  - `IScrapeInvoker` / `IScrapeMiddleware` / `ScrapeContext`
+  - 内置中间件：`LoggingMiddleware`、`MetricsMiddleware`、`TracingMiddleware`、`CacheMiddleware`、`RateLimitMiddleware`、`CircuitBreakerMiddleware`、`RetryMiddleware`、`TimeoutMiddleware`
+  - 配置模型：`ScrapeResilienceOptions`、`ScrapeRateLimitOptions`、`ScrapeCacheOptions`，**支持热更新（IOptionsMonitor）**
+- **可观测性**：基于 `System.Diagnostics.Metrics` 暴露 `pa_scrape_total` / `pa_scrape_duration_seconds` / `pa_scrape_items_total`；`ActivitySource` `Aneiang.Pa` 兼容 OpenTelemetry。
+- **代理池健康跟踪**：`ProxyEntry` 增加 `SuccessCount`/`FailureCount`/`ConsecutiveFailures`/`BannedUntilUtc`，连续失败自动临时禁用 + 半开探测。
+- **插件化模块发现**：`IScraperModule` + `[assembly: PaScraperModule]`，第三方包通过 `AddPaScraperFromLoadedAssemblies` 自动注册。
+- **统一注册表**：`IScraperRegistry` 跨 News/Lottery/Dynamic 统一查找。
+- **健康检查**：`AddPaScrapers()` 集成标准 ASP.NET Core `IHealthCheck`，可被 K8s 探针使用。
+- **v2 API**：`ScraperV2Controller` 提供基于管道的统一爬取入口（`/api/scraper/v2/*`）。
+- **强类型 SDK**：新增 `Aneiang.Pa.Client` 包，内置 `PaClient.News` / `PaClient.Lottery` / `PaClient.Registry` 子端点。
+- **测试矩阵**：新增 `Aneiang.Pa.Core.Tests` 项目（xUnit + FluentAssertions），覆盖 Pipeline、Registry、ProxyPool、ExtendableObject。
+- **CI/CD**：GitHub Actions `ci.yml`（PR 构建 + 测试 + 覆盖率）和 `release.yml`（tag 触发 NuGet 发布）。
+- **文档**：`docs/ARCHITECTURE-PLAN.md`、`docs/PIPELINE.md`、`docs/PLUGIN-MODULE.md`。
+
+### 性能（Performance）
+- **`ExtendableObjectExtensions`**：从全量序列化 O(n²) 改造为基于 `JsonNode` 的增量修改，存储开销显著降低。
+- **`DynamicScraper`**：反射元数据通过 `ConcurrentDictionary<Type, DynamicScraperMetadata>` 缓存，预编译 XPath。
+- **HttpClient 默认超时**：所有爬虫默认 30 秒超时（修复之前默认 100 秒的隐患）。
+
+### 修复（Fixed）
+- `LotteryScraper` 构造函数注释从 "知乎热门爬虫" 修复为 "彩票爬虫"。
+- `ScraperHealthCheckService` 超时机制改进（虽然新管道下应使用 `IScrapeInvoker` + `TimeoutMiddleware` 替代）。
+
+### 兼容性（Compatibility）
+- 现有 `INewsScraper.GetNewsAsync()`、`ILotteryScraper.GetWelfareLotteryAsync()` 等 API 完全保留。
+- `AneiangGenericListResult<T>.IsSuccessd` 拼写问题暂保留（旧调用方仍可用），新 `ScraperResult<T>.IsSuccess` 与之并存。
+- 升级建议：保持现有调用，逐步迁移到 `IScrapeInvoker`。
+
+### 弃用（Deprecated）
+- `INewsScraperFactory` 仍在但建议迁移到 `IScraperRegistry`。
+- 旧 `Controller`（`/api/scraper/news/{source}` 等）继续可用，新代码请用 `/api/scraper/v2/*`。
+
+---
+
 ## 2.1.6 (2026-01-15)
+
 - 新增（News）：新增 IT之家热榜爬虫（`Aneiang.Pa.ItHome`）。
 - 新增（News）：新增 36氪「48小时人气阅读」抓取支持（`Aneiang.Pa.36kr`）。
 - 更新（News）：`Aneiang.Pa.News` 增补注册与 `ScraperSource` 源枚举以支持新平台。

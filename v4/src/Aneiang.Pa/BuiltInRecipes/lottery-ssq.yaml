@@ -1,0 +1,17 @@
+name: Lottery.SSQ
+category: Lottery
+display_name: 双色球开奖
+fetch:
+  url: https://www.cwl.gov.cn/cwl_admin/front/cwlkj/search/kjxx/findDrawNotice?name=ssq&pageNo=1&pageSize=30&systemType=PC
+  headers:
+    Referer: https://www.cwl.gov.cn/
+parse:
+  type: json
+  items_path: "$.result"
+  fields:
+    code: { selector: "code" }
+    date: { selector: "date" }
+    red: { selector: "red" }
+    blue: { selector: "blue" }
+    sales: { selector: "sales" }
+    poolmoney: { selector: "poolmoney" }

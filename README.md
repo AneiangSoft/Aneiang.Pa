@@ -20,6 +20,24 @@
 
 ---
 
+## 🎉 3.0 全新架构（2026-06）
+
+3.0 进行了架构级深度演进，向后兼容现有 API：
+
+| 能力 | 说明 |
+|------|------|
+| 🧱 **统一抽象** | `IScraper<T>` + `IScraperRegistry`，跨 News/Lottery/Dynamic 一套接口 |
+| 🛤 **执行管道** | `IScrapeInvoker` + 中间件（日志/缓存/限流/重试/熔断/超时/指标/追踪） |
+| 📊 **可观测性** | `System.Diagnostics.Metrics` + `ActivitySource`，OpenTelemetry 兼容 |
+| 🔌 **插件化** | `[assembly: PaScraperModule]` 自动发现，第三方包零配置接入 |
+| 🌐 **代理池增强** | 健康跟踪 + 连续失败自动禁用 + 半开探测 |
+| ✅ **健康检查** | 标准 `IHealthCheck`（K8s 友好） + 单元测试矩阵（12 用例） |
+| 📦 **强类型 SDK** | 新增 `Aneiang.Pa.Client` 包 |
+
+详见：[`docs/ARCHITECTURE-PLAN.md`](docs/ARCHITECTURE-PLAN.md)、[`docs/PIPELINE.md`](docs/PIPELINE.md)、[`docs/PLUGIN-MODULE.md`](docs/PLUGIN-MODULE.md)。
+
+---
+
 ## ✨ 亮点特性
 
 - ✅ **多平台热榜**：微博 / 知乎 / B 站 / 百度 / 抖音 / 虎扑 / 头条 / 腾讯 / 掘金 / 澎湃 / 凤凰网 / 豆瓣 / CSDN / 博客园 / 彩票数据等

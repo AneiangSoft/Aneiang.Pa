@@ -1,0 +1,20 @@
+name: JueJin
+category: News
+display_name: 掘金热榜
+fetch:
+  url: https://api.juejin.cn/content_api/v1/content/article_rank?category_id=1&type=hot&spider=0
+  headers:
+    Referer: https://api.juejin.cn
+parse:
+  type: json
+  items_path: $.data
+  fields:
+    id: { selector: "content.content_id" }
+    title: { selector: "content.title" }
+    url:
+      selector: "content.content_id"
+      format: "https://juejin.cn/post/{value}"
+    author: { selector: "author.name" }
+    views: { selector: "content_counter.view" }
+    likes: { selector: "content_counter.digg_count" }
+    comments: { selector: "content_counter.comment" }

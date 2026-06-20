@@ -1,0 +1,40 @@
+name: v4 CI
+
+on:
+  push:
+    branches: [ main, master, v4 ]
+    paths:
+      - 'v4/**'
+      - 'Aneiang.Pa.v4.slnx'
+      - '.github/workflows/v4-ci.yml'
+  pull_request:
+    branches: [ main, master, v4 ]
+    paths:
+      - 'v4/**'
+      - 'Aneiang.Pa.v4.slnx'
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore Aneiang.Pa.v4.slnx
+
+      - name: Build
+        run: dotnet build Aneiang.Pa.v4.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test v4/tests/Aneiang.Pa.Tests/Aneiang.Pa.Tests.csproj --configuration Release --no-build --collect:"XPlat Code Coverage"
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v4-coverage
+          path: '**/coverage.cobertura.xml'
+          if-no-files-found: ignore

@@ -1,0 +1,13 @@
+name: Lottery.DLT
+category: Lottery
+display_name: 大乐透开奖
+fetch:
+  url: https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&pageSize=30&isVerify=1&pageNo=1
+parse:
+  type: json
+  items_path: "$.value.list"
+  fields:
+    drawNum: { selector: "lotteryDrawNum" }
+    drawTime: { selector: "lotteryDrawTime" }
+    drawResult: { selector: "lotteryDrawResult" }
+    saleAmount: { selector: "totalSaleAmount" }

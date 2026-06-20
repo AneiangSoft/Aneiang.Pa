@@ -1,0 +1,19 @@
+name: TouTiao
+category: News
+display_name: 今日头条热榜
+fetch:
+  url: https://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc
+  headers:
+    Referer: https://www.toutiao.com
+parse:
+  type: json
+  items_path: $.data
+  fields:
+    id: { selector: "ClusterIdStr" }
+    title: { selector: "Title" }
+    url:
+      selector: "ClusterIdStr"
+      format: "https://www.toutiao.com/trending/{value}/"
+    image: { selector: "Image.url" }
+    label: { selector: "Label" }
+    hotValue: { selector: "HotValue" }

@@ -1,0 +1,28 @@
+name: WeiBo
+category: News
+display_name: 微博热搜
+fetch:
+  url: https://s.weibo.com/top/summary?cate=realtimehot
+  headers:
+    Referer: https://s.weibo.com
+    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+parse:
+  type: html
+  container: "xpath://*[@id='pl_top_realtimehot']//table/tbody/tr[position()>1]"
+  fields:
+    title:
+      selector: "xpath:.//td[@class='td-02']/a[not(contains(@href, 'javascript:void(0);'))]"
+      trim: true
+    url:
+      selector: "xpath:.//td[@class='td-02']/a[not(contains(@href, 'javascript:void(0);'))]"
+      attr: href
+      base: https://s.weibo.com
+    flag:
+      selector: "xpath:.//td[@class='td-03']"
+      trim: true
+    icon:
+      selector: "xpath:.//td[@class='td-03']"
+      trim: true
+      map:
+        "新": https://simg.s.weibo.com/moter/flags/1_0.png
+        "热": https://simg.s.weibo.com/moter/flags/2_0.png

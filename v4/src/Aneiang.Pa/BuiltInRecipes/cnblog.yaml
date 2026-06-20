@@ -1,0 +1,29 @@
+name: CnBlog
+category: News
+display_name: 博客园热榜
+fetch:
+  url: https://www.cnblogs.com/pick/
+  headers:
+    Referer: https://www.cnblogs.com
+parse:
+  type: html
+  container: "#post_list article.post-item"
+  fields:
+    id:
+      selector: "."
+      attr: "data-post-id"
+    title:
+      selector: "a.post-item-title"
+      trim: true
+    url:
+      selector: "a.post-item-title"
+      attr: href
+    desc:
+      selector: "p.post-item-summary"
+      trim: true
+    authorName:
+      selector: "a.post-item-author span"
+      trim: true
+    authorUrl:
+      selector: "a.post-item-author"
+      attr: href

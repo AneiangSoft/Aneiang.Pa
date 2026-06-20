@@ -1,0 +1,14 @@
+name: IFeng
+category: News
+display_name: 凤凰网热榜
+fetch:
+  url: https://www.ifeng.com/
+  headers:
+    Referer: https://www.ifeng.com
+parse:
+  type: embedded
+  extract_pattern: "var\\s+allData\\s*=\\s*(\\{[\\s\\S]*?\\});"
+  items_path: $.hotNews1
+  fields:
+    title: { selector: "title" }
+    url: { selector: "url" }

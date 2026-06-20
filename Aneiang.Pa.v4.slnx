@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/docs/">
+    <File Path="docs/REDESIGN-PLAN-V4.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="v4/src/Aneiang.Pa.Abstractions/Aneiang.Pa.Abstractions.csproj" />
+    <Project Path="v4/src/Aneiang.Pa/Aneiang.Pa.csproj" />
+    <Project Path="v4/src/Aneiang.Pa.AspNetCore/Aneiang.Pa.AspNetCore.csproj" />
+    <Project Path="v4/src/Aneiang.Pa.Client/Aneiang.Pa.Client.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="v4/samples/01-hello-world/HelloPa.csproj" />
+    <Project Path="v4/samples/02-custom-recipe/CustomRecipe.csproj" />
+    <Project Path="v4/samples/03-asp-net-core/PaWeb.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="v4/tests/Aneiang.Pa.Tests/Aneiang.Pa.Tests.csproj" />
+  </Folder>
+</Solution>

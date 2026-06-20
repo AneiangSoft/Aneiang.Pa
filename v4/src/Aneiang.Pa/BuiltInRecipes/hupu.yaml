@@ -1,0 +1,18 @@
+name: HuPu
+category: News
+display_name: 虎扑热帖
+fetch:
+  url: https://bbs.hupu.com/topic-daily-hot
+  headers:
+    Referer: https://bbs.hupu.com
+parse:
+  type: html
+  container: "li.bbs-sl-web-post-body"
+  fields:
+    title:
+      selector: "a.p-title"
+      trim: true
+    url:
+      selector: "a.p-title"
+      attr: href
+      base: https://bbs.hupu.com

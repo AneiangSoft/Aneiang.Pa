@@ -1,0 +1,20 @@
+name: BaiDu
+category: News
+display_name: 百度热榜
+fetch:
+  url: https://top.baidu.com/board?tab=realtime
+  headers:
+    Referer: https://top.baidu.com
+parse:
+  type: embedded
+  extract_pattern: "<!--s-data:(.*?)-->"
+  items_path: $.data.cards[0].content
+  filter_field: isTop
+  filter_equals_value: "True"
+  fields:
+    isTop: { selector: "isTop" }
+    title: { selector: "word", trim: true }
+    desc: { selector: "desc" }
+    url: { selector: "rawUrl" }
+    hotScore: { selector: "hotScore" }
+    image: { selector: "img" }

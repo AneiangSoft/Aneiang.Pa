@@ -61,6 +61,10 @@ namespace Aneiang.Pa.Core.Proxy
 
             // 注意：这里使用带 IServiceProvider 的重载，方便读取代理配置。
             return services.AddHttpClient(PaConsts.DefaultHttpClientName)
+                .ConfigureHttpClient(client =>
+                {
+                    client.Timeout = TimeSpan.FromSeconds(PaConsts.DefaultHttpTimeoutSeconds);
+                })
                 .ConfigurePrimaryHttpMessageHandler(sp =>
                 {
                     var options = sp.GetService<IOptions<ProxyPoolOptions>>()?.Value ?? new ProxyPoolOptions();

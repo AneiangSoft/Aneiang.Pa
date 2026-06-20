@@ -1,0 +1,16 @@
+name: Tencent
+category: News
+display_name: 腾讯新闻热榜
+fetch:
+  url: https://i.news.qq.com/web_backend/v2/getTagInfo?tagId=aEWqxLtdgmQ%3D
+  headers:
+    Referer: https://i.news.qq.com
+parse:
+  type: json
+  items_path: $.data.tabs[0].articleList
+  fields:
+    id: { selector: "id" }
+    title: { selector: "title" }
+    url: { selector: "link_info.url" }
+    publishTime: { selector: "publish_time" }
+    media: { selector: "media" }

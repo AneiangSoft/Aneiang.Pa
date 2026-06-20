@@ -1,0 +1,117 @@
+using Aneiang.Pa.Core.Data;
+using Aneiang.Pa.Core.News;
+using Aneiang.Pa.Core.News.Models;
+using Aneiang.Pa.Core.Scraper;
+using Aneiang.Pa.Core.Models;
+using Aneiang.Pa.JueJin.Models;
+using Microsoft.Extensions.Options;
+using System;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Aneiang.Pa.JueJin.News
+{
+    /// <summary>
+    /// 掘金新闻爬虫
+    /// </summary>
+    public class JueJinNewScraper : IJueJinNewScraper
+    {
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly JueJinScraperOptions _options;
+        /// <summary>
+        /// 掘金新闻爬虫
+        /// </summary>
+        /// <param name="httpClientFactory"></param>
+        /// <param name="options"></param>
+        public JueJinNewScraper(IHttpClientFactory httpClientFactory, IOptions<JueJinScraperOptions> options)
+        {
+            _httpClientFactory = httpClientFactory;
+            _options = options.Value;
+        }
+
+        /// <summary>
+        /// 标识
+        /// </summary>
+        public string Source => "JueJin";
+
+        /// <summary>
+        /// 爬虫元数据
+        /// </summary>
+        public ScraperDescriptor Descriptor { get; } = new ScraperDescriptor
+        {
+            Category = ScraperCategories.News,
+            Source = "JueJin",
+            DisplayName = "掘金热榜",
+            ResultType = typeof(NewsItem)
+        };
+
+        /// <summary>
+        /// 执行爬取（统一入口）
+        /// </summary>
+        public async Task<ScraperResult<NewsItem>> ScrapeAsync(CancellationToken cancellationToken = default)
+        {
+            var result = await GetNewsAsync();
+            return new ScraperResult<NewsItem>
+            {
+                IsSuccess = result.IsSuccessd,
+                ErrorMessage = result.ErrorMessage,
+                UpdatedTime = result.UpdatedTime,
+                Data = result.Data
+            };
+        }
+
+
+        /// <summary>
+        /// 获取热门消息
+        /// </summary>
+        /// <returns>新闻结果</returns>
+        public async Task<AneiangGenericListResult<NewsItem>> GetNewsAsync()
+        {
+            try
+            {
+                _options.Check();
+                var client = ScraperHttpClientHelper.CreateConfiguredClient(
+                    _httpClientFactory,
+                    _options.BaseUrl,
+                    _options.UserAgent);
+                
+                var newsResult = new AneiangGenericListResult<NewsItem>();
+                var response = await ScraperHttpClientHelper.GetAsync(
+                    client,
+                    $"{_options.BaseUrl}{_options.NewsUrl}");
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    var result = JsonSerializer.Deserialize<JueJinOriginalResult>(jsonString);
+                    if (result == null || result.err_no != 0) return newsResult;
+                    
+                    foreach (var item in result.data)
+                    {
+                        var newsItem = new NewsItem
+                        {
+                            Id = item.content.content_id,
+                            Title = item.content.title,
+                            Url = $"https://juejin.cn/post/{item.content.content_id}",
+                            MobileUrl = $"https://juejin.cn/post/{item.content.content_id}"
+                        };
+                        newsItem.SetOriginal(item);
+                        newsResult.Data.Add(newsItem);
+                    }
+                }
+                else
+                {
+                    return AneiangGenericListResult<NewsItem>.Failure($"HTTP 请求失败，状态码: {response.StatusCode}");
+                }
+                
+                return newsResult;
+            }
+            catch (Exception e)
+            {
+                return ScraperHttpClientHelper.CreateNewsErrorResult(e, Source);
+            }
+        }
+    }
+}

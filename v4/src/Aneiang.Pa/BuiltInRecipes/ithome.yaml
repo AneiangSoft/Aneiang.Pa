@@ -1,0 +1,23 @@
+name: ItHome
+category: News
+display_name: IT 之家
+fetch:
+  url: https://www.ithome.com/blog/
+  headers:
+    Referer: https://www.ithome.com
+parse:
+  type: html
+  container: "ul.bl li"
+  fields:
+    title:
+      selector: "a.title"
+      trim: true
+    url:
+      selector: "a.title"
+      attr: href
+    desc:
+      selector: "div.m"
+      trim: true
+    createTime:
+      selector: "div.c"
+      attr: "data-ot"

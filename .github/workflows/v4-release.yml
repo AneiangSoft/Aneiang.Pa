@@ -1,0 +1,42 @@
+name: v4 Release
+
+on:
+  push:
+    tags:
+      - 'v4.*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore Aneiang.Pa.v4.slnx
+
+      - name: Build
+        run: dotnet build Aneiang.Pa.v4.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test v4/tests/Aneiang.Pa.Tests/Aneiang.Pa.Tests.csproj --configuration Release --no-build
+
+      - name: Pack
+        run: |
+          dotnet pack v4/src/Aneiang.Pa.Abstractions/Aneiang.Pa.Abstractions.csproj -c Release -o ./artifacts
+          dotnet pack v4/src/Aneiang.Pa/Aneiang.Pa.csproj -c Release -o ./artifacts
+          dotnet pack v4/src/Aneiang.Pa.AspNetCore/Aneiang.Pa.AspNetCore.csproj -c Release -o ./artifacts
+          dotnet pack v4/src/Aneiang.Pa.Client/Aneiang.Pa.Client.csproj -c Release -o ./artifacts
+
+      - name: Push to NuGet
+        if: env.NUGET_API_KEY != ''
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push ./artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY --skip-duplicate
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v4-nupkgs
+          path: ./artifacts/*.nupkg

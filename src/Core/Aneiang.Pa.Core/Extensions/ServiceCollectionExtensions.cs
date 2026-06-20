@@ -27,7 +27,11 @@ namespace Aneiang.Pa.Core.Extensions
         {
             if (addHttpClient)
             {
-                var httpClientBuilder = services.AddHttpClient(PaConsts.DefaultHttpClientName);
+                var httpClientBuilder = services.AddHttpClient(PaConsts.DefaultHttpClientName)
+                    .ConfigureHttpClient(client =>
+                    {
+                        client.Timeout = TimeSpan.FromSeconds(PaConsts.DefaultHttpTimeoutSeconds);
+                    });
                 if (httpConfigureHandler != null)
                 {
                     httpClientBuilder.ConfigurePrimaryHttpMessageHandler(httpConfigureHandler);
@@ -35,6 +39,7 @@ namespace Aneiang.Pa.Core.Extensions
             }
 
             services.TryAddSingleton<TScraper, TScraperImpl>();
+            services.AddSingleton<IScraper>(sp => sp.GetRequiredService<TScraper>());
         }
 
         /// <summary>
@@ -59,6 +64,15 @@ namespace Aneiang.Pa.Core.Extensions
             }
 
             AddScraper<TScraper, TScraperImpl>(services, httpConfigureHandler, addHttpClient);
+        }
+
+        /// <summary>
+        /// 注册爬虫注册表（IScraperRegistry），应在所有爬虫注册完成后调用。
+        /// </summary>
+        public static IServiceCollection AddScraperRegistry(this IServiceCollection services)
+        {
+            services.TryAddSingleton<IScraperRegistry, ScraperRegistry>();
+            return services;
         }
     }
 }

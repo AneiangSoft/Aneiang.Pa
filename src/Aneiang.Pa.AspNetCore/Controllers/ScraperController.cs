@@ -2,6 +2,8 @@ using Aneiang.Pa.AspNetCore.Caching;
 using Aneiang.Pa.AspNetCore.Options;
 using Aneiang.Pa.Core.News;
 using Aneiang.Pa.Core.News.Models;
+using Aneiang.Pa.Core.Pipeline;
+using Aneiang.Pa.Core.Scraper;
 using Aneiang.Pa.Lottery.Services;
 using Aneiang.Pa.News.Models;
 using Aneiang.Pa.News.News;
@@ -9,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Aneiang.Pa.Lottery.Data;
 
@@ -28,6 +32,8 @@ namespace Aneiang.Pa.AspNetCore.Controllers
         private readonly IScraperHealthCheckService? _healthCheckService;
         private readonly ILotteryScraper _lotteryScraper;
         private readonly ICacheService _cache;
+        private readonly IScraperRegistry _registry;
+        private readonly IScrapeInvoker? _invoker;
 
         private static readonly string[] AvailableSources = Enum.GetNames(typeof(ScraperSource));
         private static readonly string[] AvailableLotteryTypes = Enum.GetNames(typeof(LotteryType));
@@ -35,24 +41,22 @@ namespace Aneiang.Pa.AspNetCore.Controllers
         /// <summary>
         /// 初始化爬虫控制器
         /// </summary>
-        /// <param name="scraperFactory">新闻爬虫工厂</param>
-        /// <param name="lotteryScraper">彩票爬虫</param>
-        /// <param name="logger">日志记录器</param>
-        /// <param name="options">配置选项</param>
-        /// <param name="cache">缓存服务</param>
-        /// <param name="healthCheckService">健康检查服务（可选）</param>
         public ScraperController(
             INewsScraperFactory scraperFactory,
             ILogger<ScraperController> logger,
             IOptions<ScraperControllerOptions> options,
             ILotteryScraper lotteryScraper,
             ICacheService cache,
+            IScraperRegistry registry,
+            IScrapeInvoker? invoker = null,
             IScraperHealthCheckService? healthCheckService = null)
         {
             _scraperFactory = scraperFactory ?? throw new ArgumentNullException(nameof(scraperFactory));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _lotteryScraper = lotteryScraper;
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+            _registry = registry ?? throw new ArgumentNullException(nameof(registry));
+            _invoker = invoker;
             _options = options?.Value ?? new ScraperControllerOptions();
             _healthCheckService = healthCheckService;
         }
@@ -400,6 +404,91 @@ namespace Aneiang.Pa.AspNetCore.Controllers
             {
                 _logger.LogError(ex, "健康检查过程中发生异常: {Source}", source);
                 return StatusCode(500, new { error = $"健康检查失败: {ex.Message}" });
+            }
+        }
+
+        // ========================= 统一入口（基于 IScraperRegistry） =========================
+
+        /// <summary>
+        /// 获取所有已注册爬虫的描述符列表（支持按分类筛选）
+        /// </summary>
+        /// <param name="category">可选分类筛选</param>
+        /// <returns>爬虫描述符列表</returns>
+        [HttpGet("registry/descriptors")]
+        [ProducesResponseType(typeof(object), 200)]
+        public ActionResult GetAllScrapers([FromQuery] string? category = null)
+        {
+            var descriptors = _registry.GetDescriptors(category).ToList();
+            return Ok(new
+            {
+                scrapers = descriptors,
+                count = descriptors.Count,
+                categories = _registry.GetCategories()
+            });
+        }
+
+        /// <summary>
+        /// 获取所有已注册分类
+        /// </summary>
+        /// <returns>分类列表</returns>
+        [HttpGet("registry/categories")]
+        [ProducesResponseType(typeof(object), 200)]
+        public ActionResult GetCategories()
+        {
+            return Ok(new
+            {
+                categories = _registry.GetCategories()
+            });
+        }
+
+        /// <summary>
+        /// 统一爬取入口：按 Category + Source 获取数据
+        /// </summary>
+        /// <param name="category">分类（如 News / Lottery）</param>
+        /// <param name="source">源标识（如 BaiDu / SSQ）</param>
+        /// <returns>爬取结果</returns>
+        [HttpGet("fetch/{category}/{source}")]
+        [ProducesResponseType(typeof(object), 200)]
+        [ProducesResponseType(typeof(object), 404)]
+        [ProducesResponseType(typeof(object), 500)]
+        public async Task<ActionResult> FetchScraper(string category, string source)
+        {
+            if (string.IsNullOrWhiteSpace(category) || string.IsNullOrWhiteSpace(source))
+            {
+                return BadRequest(new { error = "category 和 source 参数不能为空" });
+            }
+
+            try
+            {
+                var scraper = _registry.GetScraper(category, source);
+                if (scraper == null)
+                {
+                    _logger.LogWarning("未找到爬虫: {Category}/{Source}", category, source);
+                    return NotFound(new { error = $"未找到爬虫: {category}/{source}" });
+                }
+
+                var cacheKey = scraper.Descriptor.ToCacheKey();
+                var descriptor = scraper.Descriptor;
+
+                object result;
+                if (descriptor.Category == ScraperCategories.News && scraper is INewsScraper newsScraper)
+                {
+                    result = await _cache.GetOrCreateAsync(cacheKey,
+                        () => newsScraper.GetNewsAsync(),
+                        _options.CacheDuration);
+                }
+                else
+                {
+                    _logger.LogWarning("FetchScraper 暂不支持该爬虫类型的直接调用: {Category}/{Source}", category, source);
+                    return StatusCode(501, new { error = $"暂不支持直接调用 {category}/{source}，请使用专用端点" });
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "FetchScraper 异常: {Category}/{Source}", category, source);
+                return StatusCode(500, new { error = $"爬取失败: {ex.Message}" });
             }
         }
     }

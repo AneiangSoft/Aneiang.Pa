@@ -1,0 +1,21 @@
+name: _36kr
+category: News
+display_name: 36 氪快讯
+fetch:
+  url: https://www.36kr.com/newsflashes
+  headers:
+    Referer: https://www.36kr.com
+parse:
+  type: html
+  container: "div.newsflash-catalog-flow-list div.flow-item"
+  fields:
+    title:
+      selector: "a.item-title"
+      trim: true
+    url:
+      selector: "a.item-title"
+      attr: href
+      base: https://www.36kr.com
+    desc:
+      selector: "div.item-desc span"
+      trim: true

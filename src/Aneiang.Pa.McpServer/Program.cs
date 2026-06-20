@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Aneiang.Pa.Core.Scraper;
 using Aneiang.Pa.Extensions;
 using Aneiang.Pa.Lottery.Data;
 using Aneiang.Pa.Lottery.Services;
@@ -80,6 +81,27 @@ public static class AneiangPaTools
         var scraper = scraperFactory.GetScraper(scraperSource);
         var result = await scraper.GetNewsAsync();
         return result;
+    }
+
+    [McpServerTool(Name = "scraper.list"), Description("列出所有已注册爬虫（支持按分类筛选，如 News/Lottery/Dynamic）")]
+    public static object ListScrapers(
+        IScraperRegistry registry,
+        [Description("可选：分类筛选（News/Lottery/Dynamic）")] string? category = null)
+    {
+        var descriptors = registry.GetDescriptors(category).Select(d => new
+        {
+            category = d.Category,
+            source = d.Source,
+            displayName = d.DisplayName,
+            supportsPaging = d.SupportsPaging
+        }).OrderBy(x => x.category).ThenBy(x => x.source).ToArray();
+
+        return new
+        {
+            scrapers = descriptors,
+            count = descriptors.Length,
+            categories = registry.GetCategories()
+        };
     }
 
     [McpServerTool(Name = "lottery.types"), Description("返回当前支持的彩票类型列表（包含中文别名）")]

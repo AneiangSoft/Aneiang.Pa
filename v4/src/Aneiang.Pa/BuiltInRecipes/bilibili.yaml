@@ -1,0 +1,19 @@
+name: Bilibili
+category: News
+display_name: B 站热搜
+fetch:
+  url: https://s.search.bilibili.com/main/hotword?limit=30
+  headers:
+    Referer: https://s.search.bilibili.com
+parse:
+  type: json
+  items_path: $.list
+  fields:
+    id: { selector: "keyword" }
+    title: { selector: "show_name" }
+    keyword:
+      selector: "keyword"
+      url_encode: true
+      format: "https://search.bilibili.com/all?keyword={value}"
+    icon: { selector: "icon" }
+    heatScore: { selector: "heat_score" }

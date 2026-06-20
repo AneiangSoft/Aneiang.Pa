@@ -1,0 +1,18 @@
+name: ThePaper
+category: News
+display_name: 澎湃新闻热榜
+fetch:
+  url: https://cache.thepaper.cn/contentapi/wwwIndex/rightSidebar
+  headers:
+    Referer: https://cache.thepaper.cn
+parse:
+  type: json
+  items_path: $.data.hotNews
+  fields:
+    id: { selector: "contId" }
+    title: { selector: "name" }
+    url:
+      selector: "contId"
+      format: "https://www.thepaper.cn/newsDetail_forward_{value}"
+    pubTime: { selector: "pubTimeNew" }
+    image: { selector: "pic" }

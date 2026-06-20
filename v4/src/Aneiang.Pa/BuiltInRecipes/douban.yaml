@@ -1,0 +1,20 @@
+name: DouBan
+category: News
+display_name: 豆瓣电影热门
+fetch:
+  url: https://m.douban.com/rexxar/api/v2/subject/recent_hot/movie
+  headers:
+    Referer: https://m.douban.com
+    Accept: application/json
+parse:
+  type: json
+  items_path: $.items
+  fields:
+    id: { selector: "id" }
+    title: { selector: "title" }
+    url:
+      selector: "id"
+      format: "https://movie.douban.com/subject/{value}"
+    rating: { selector: "rating.value" }
+    cardSubtitle: { selector: "card_subtitle" }
+    image: { selector: "pic.large" }

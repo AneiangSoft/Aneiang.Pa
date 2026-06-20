@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <PackageId>Aneiang.Pa.Abstractions</PackageId>
+    <Description>Aneiang.Pa 4.0 核心抽象（接口/模型）</Description>
+  </PropertyGroup>
+
+</Project>
