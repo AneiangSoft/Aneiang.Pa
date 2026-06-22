@@ -78,6 +78,9 @@ public sealed class PaContainer
         services.AddSingleton<IScrapeMiddleware, RetryMiddleware>();
         services.AddSingleton<IScrapeMiddleware, TimeoutMiddleware>();
 
+        // 站点特化中间件（对特定 Recipe 透明生效）
+        services.AddSingleton<IScrapeMiddleware, DouYinCookieMiddleware>();
+
         // 用户额外中间件
         if (extraMiddlewares != null)
             foreach (var mw in extraMiddlewares)

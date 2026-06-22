@@ -12,6 +12,7 @@
     <Project Path="samples/01-hello-world/HelloPa.csproj" />
     <Project Path="samples/02-custom-recipe/CustomRecipe.csproj" />
     <Project Path="samples/03-asp-net-core/PaWeb.csproj" />
+    <Project Path="samples/04-douyin-demo/DouYinDemo.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Aneiang.Pa.Tests/Aneiang.Pa.Tests.csproj" />

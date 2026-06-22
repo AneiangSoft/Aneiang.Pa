@@ -1,12 +1,11 @@
 name: DouYin
 category: News
 display_name: 抖音热搜
-# 注意：抖音真实接口需要先访问 login.douyin.com 拿 Cookie。这里给出基础 Recipe，
-# 高级用法可结合 Pa.Configure 自定义 HttpHandler 注入 Cookie。
 fetch:
   url: https://www.douyin.com/aweme/v1/web/hot/search/list/?device_platform=webapp&aid=6383&channel=channel_pc_web&detail_list=1
   headers:
     Referer: https://www.douyin.com
+    Cookie: "{douyin_cookie}"
 parse:
   type: json
   items_path: $.data.word_list

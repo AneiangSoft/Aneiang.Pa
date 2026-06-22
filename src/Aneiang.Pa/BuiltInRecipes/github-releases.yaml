@@ -1,0 +1,20 @@
+name: Github.Releases
+category: News
+display_name: GitHub Releases (dotnet/runtime)
+# 默认抓 dotnet/runtime；如需其他仓库，自定义 Recipe 或使用 Pa.Define 覆盖 URL
+fetch:
+  url: https://api.github.com/repos/dotnet/runtime/releases
+  headers:
+    Accept: application/vnd.github+json
+    User-Agent: Aneiang.Pa/4.0
+parse:
+  type: json
+  items_path: $
+  fields:
+    tag: { selector: tag_name }
+    name: { selector: name }
+    body: { selector: body }
+    publishedAt: { selector: published_at }
+    htmlUrl: { selector: html_url }
+    author: { selector: author.login }
+    isPrerelease: { selector: prerelease }

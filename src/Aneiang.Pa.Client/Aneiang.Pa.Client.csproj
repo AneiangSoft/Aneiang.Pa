@@ -5,11 +5,24 @@
     <LangVersion>latest</LangVersion>
     <PackageId>Aneiang.Pa.Client</PackageId>
     <Description>Aneiang.Pa 4.0 — HTTP 强类型客户端</Description>
+    <Authors>AneiangSoft</Authors>
+    <Company>AneiangSoft</Company>
+    <Product>Aneiang.Pa</Product>
+    <Version>4.0.0</Version>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AneiangSoft/Aneiang.Pa</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AneiangSoft/Aneiang.Pa.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>scraper;http-client;sdk</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aneiang.Pa.Abstractions\Aneiang.Pa.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

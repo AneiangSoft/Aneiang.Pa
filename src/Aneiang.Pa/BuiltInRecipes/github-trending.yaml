@@ -1,0 +1,34 @@
+name: Github.Trending
+category: News
+display_name: GitHub Trending
+fetch:
+  url: https://github.com/trending
+  headers:
+    Referer: https://github.com
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9
+parse:
+  type: html
+  container: "article.Box-row"
+  fields:
+    repo:
+      selector: "h2 a"
+      trim: true
+    url:
+      selector: "h2 a"
+      attr: href
+      base: https://github.com
+    description:
+      selector: "p"
+      trim: true
+    language:
+      selector: "span[itemprop=programmingLanguage]"
+      trim: true
+    stars:
+      selector: "a[href$='/stargazers']"
+      trim: true
+    forks:
+      selector: "a[href$='/forks']"
+      trim: true
+    starsToday:
+      selector: "span.d-inline-block.float-sm-right"
+      trim: true

@@ -42,6 +42,7 @@ public sealed class HttpFetcher : IFetcher
         foreach (var kv in spec.Headers)
         {
             var value = TemplateRenderer.Render(kv.Value, ctx.Variables);
+            if (string.IsNullOrWhiteSpace(value)) continue;
             if (!request.Headers.TryAddWithoutValidation(kv.Key, value))
             {
                 // 内容头延后处理

@@ -5,11 +5,24 @@
     <LangVersion>latest</LangVersion>
     <PackageId>Aneiang.Pa.AspNetCore</PackageId>
     <Description>Aneiang.Pa 4.0 ASP.NET Core 集成（一行 MapPaApi）</Description>
+    <Authors>AneiangSoft</Authors>
+    <Company>AneiangSoft</Company>
+    <Product>Aneiang.Pa</Product>
+    <Version>4.0.0</Version>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AneiangSoft/Aneiang.Pa</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AneiangSoft/Aneiang.Pa.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>aspnetcore;web-api;scraper;rest-api</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aneiang.Pa\Aneiang.Pa.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
