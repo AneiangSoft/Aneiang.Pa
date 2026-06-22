@@ -1,46 +1,34 @@
 # Aneiang.Pa 版本变更记录
 
-## 3.0.0 (2026-06-21) — 架构级演进
+## 4.0 (2026-06-22)
 
-### 重大变更（Breaking + Compatible）
-- **统一抽象层**：所有爬虫现在实现 `IScraper<TResult>` 与 `ScraperDescriptor`，支持按 Category/Source 字符串注册（取代 `ScraperSource` 枚举的硬绑定，旧枚举仍保留向后兼容）。
-- **目录重组**：`src/News/` → `src/Modules/News/`；`src/Lotteries/` → `src/Modules/Lottery/`；`src/Core/Aneiang.Pa.Dynamic/` → `src/Modules/Dynamic/`；新增 `src/Client/Aneiang.Pa.Client/`。
+> **重大架构升级：从 2.x 重构为 4.0**
 
-### 新增（Added）
-- **管道架构（Aneiang.Pa.Core.Pipeline）**：基于中间件模型，统一处理日志/缓存/限流/重试/熔断/超时/指标/追踪等横切关注点。
-  - `IScrapeInvoker` / `IScrapeMiddleware` / `ScrapeContext`
-  - 内置中间件：`LoggingMiddleware`、`MetricsMiddleware`、`TracingMiddleware`、`CacheMiddleware`、`RateLimitMiddleware`、`CircuitBreakerMiddleware`、`RetryMiddleware`、`TimeoutMiddleware`
-  - 配置模型：`ScrapeResilienceOptions`、`ScrapeRateLimitOptions`、`ScrapeCacheOptions`，**支持热更新（IOptionsMonitor）**
-- **可观测性**：基于 `System.Diagnostics.Metrics` 暴露 `pa_scrape_total` / `pa_scrape_duration_seconds` / `pa_scrape_items_total`；`ActivitySource` `Aneiang.Pa` 兼容 OpenTelemetry。
-- **代理池健康跟踪**：`ProxyEntry` 增加 `SuccessCount`/`FailureCount`/`ConsecutiveFailures`/`BannedUntilUtc`，连续失败自动临时禁用 + 半开探测。
-- **插件化模块发现**：`IScraperModule` + `[assembly: PaScraperModule]`，第三方包通过 `AddPaScraperFromLoadedAssemblies` 自动注册。
-- **统一注册表**：`IScraperRegistry` 跨 News/Lottery/Dynamic 统一查找。
-- **健康检查**：`AddPaScrapers()` 集成标准 ASP.NET Core `IHealthCheck`，可被 K8s 探针使用。
-- **v2 API**：`ScraperV2Controller` 提供基于管道的统一爬取入口（`/api/scraper/v2/*`）。
-- **强类型 SDK**：新增 `Aneiang.Pa.Client` 包，内置 `PaClient.News` / `PaClient.Lottery` / `PaClient.Registry` 子端点。
-- **测试矩阵**：新增 `Aneiang.Pa.Core.Tests` 项目（xUnit + FluentAssertions），覆盖 Pipeline、Registry、ProxyPool、ExtendableObject。
-- **CI/CD**：GitHub Actions `ci.yml`（PR 构建 + 测试 + 覆盖率）和 `release.yml`（tag 触发 NuGet 发布）。
-- **文档**：`docs/ARCHITECTURE-PLAN.md`、`docs/PIPELINE.md`、`docs/PLUGIN-MODULE.md`。
+### 核心变更
+- **架构重构**：从 `Aneiang.Pa.News` + `Aneiang.Pa.Sectors` 双模块合并为统一的 `Aneiang.Pa` 单包
+- **极简 API**：引入 `Pa` 静态门面类，`Pa.Source("WeiBo").GetAsync()` 一行搞定
+- **Recipe 声明式**：支持 YAML / Builder DSL / 特性标注三种方式，新增平台 0 行 C# 代码
+- **执行管道**：日志 / 缓存 / 重试 / 熔断 / 超时 / 限流 / 指标 / 追踪 默认开启
 
-### 性能（Performance）
-- **`ExtendableObjectExtensions`**：从全量序列化 O(n²) 改造为基于 `JsonNode` 的增量修改，存储开销显著降低。
-- **`DynamicScraper`**：反射元数据通过 `ConcurrentDictionary<Type, DynamicScraperMetadata>` 缓存，预编译 XPath。
-- **HttpClient 默认超时**：所有爬虫默认 30 秒超时（修复之前默认 100 秒的隐患）。
+### 新增特性
+- **内嵌 20 个平台**：微博 / 知乎 / B站 / 百度 / 抖音 / 头条 / 虎扑 / 腾讯 / 掘金 / 澎湃 / 豆瓣 / 凤凰 / CSDN / 博客园 / IT之家 / 36氪 / GitHub Trending / GitHub Releases / 双色球 / 大乐透
+- **ASP.NET Core 深度集成**：`app.MapPaApi()` 一行开启 REST API
+- **数据缓存**：支持 None / Memory / Redis，可配置缓存时长
+- **代理池**：轮询/随机 + 健康跟踪 + 连续失败自动禁用
+- **细粒度授权**：ApiKey / Custom / Combined 按需启用
+- **可观测性**：`System.Diagnostics.Metrics` + `ActivitySource`，OpenTelemetry 兼容
 
-### 修复（Fixed）
-- `LotteryScraper` 构造函数注释从 "知乎热门爬虫" 修复为 "彩票爬虫"。
-- `ScraperHealthCheckService` 超时机制改进（虽然新管道下应使用 `IScrapeInvoker` + `TimeoutMiddleware` 替代）。
+### 包结构
+| 包 | 说明 |
+|----|------|
+| `Aneiang.Pa` | 核心引擎 + 20 内置 Recipe + 8 中间件 + 4 解析器 |
+| `Aneiang.Pa.AspNetCore` | `app.MapPaApi()` 一行起 REST API |
+| `Aneiang.Pa.Client` | HTTP 强类型客户端，调用远程 Pa API 服务 |
+| `Aneiang.Pa.Abstractions` | 接口与模型（写扩展包时引用） |
 
-### 兼容性（Compatibility）
-- 现有 `INewsScraper.GetNewsAsync()`、`ILotteryScraper.GetWelfareLotteryAsync()` 等 API 完全保留。
-- `AneiangGenericListResult<T>.IsSuccessd` 拼写问题暂保留（旧调用方仍可用），新 `ScraperResult<T>.IsSuccess` 与之并存。
-- 升级建议：保持现有调用，逐步迁移到 `IScrapeInvoker`。
-
-### 弃用（Deprecated）
-- `INewsScraperFactory` 仍在但建议迁移到 `IScraperRegistry`。
-- 旧 `Controller`（`/api/scraper/news/{source}` 等）继续可用，新代码请用 `/api/scraper/v2/*`。
-
----
+### 依赖更新
+- 多目标框架：`netstandard2.1;net8.0`，覆盖 .NET Core 3.0+ 与 .NET 5/6/7/8/9+
+- 升级 HtmlAgilityPack → **AngleSharp 1.1.2** + AngleSharp.XPath 2.0.4
 
 ## 2.1.6 (2026-01-15)
 
