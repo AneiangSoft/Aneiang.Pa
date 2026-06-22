@@ -1,7 +1,4 @@
 <Solution>
-  <Folder Name="/docs/">
-    <File Path="docs/REDESIGN-PLAN-V4.md" />
-  </Folder>
   <Folder Name="/src/">
     <Project Path="src/Aneiang.Pa.Abstractions/Aneiang.Pa.Abstractions.csproj" />
     <Project Path="src/Aneiang.Pa/Aneiang.Pa.csproj" />
